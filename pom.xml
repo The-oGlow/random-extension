@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.glowa-net.maven.parent</groupId>
+        <artifactId>global-pom</artifactId>
+        <version>0.2.3-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.glowa-net.maven.tools</groupId>
+    <artifactId>random-extension</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <name>Randomizer Extension</name>
+    <description>Generate random values</description>
+    <url>http://www.glowa-net.com</url>
+    <inceptionYear>2020</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://gitlab.com/ollily/random-extension.git</connection>
+        <developerConnection>scm:git:git@gitlab.com/ollily/random-extension.git</developerConnection>
+        <url>https://gitlab.com/ollily/random-extension</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitLab Issues</system>
+        <url>https://gitlab.com/ollily/random-extension/-/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>gitlab</system>
+        <url>https://gitlab.com/ollily/random-extension/-/pipelines</url>
+    </ciManagement>
+
+    <properties>
+        <!-- Sonar Properties -->
+        <sonar.projectKey>ollily_random-extension</sonar.projectKey>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.glowa-net.maven.tools</groupId>
+                <artifactId>unit-extension</artifactId>
+                <version>0.1.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.glowa-net.maven.tools</groupId>
+            <artifactId>unit-extension</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <!-- Test -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>coding.read</id>
+            <name>CoDinG jFrog Group</name>
+            <url>https://coding.jfrog.io/artifactory/groups</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:30</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>
