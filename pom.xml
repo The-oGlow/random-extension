@@ -50,6 +50,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- My -->
             <dependency>
                 <groupId>com.glowa-net.maven.tools</groupId>
                 <artifactId>unit-extension</artifactId>
@@ -59,10 +60,12 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- My -->
         <dependency>
             <groupId>com.glowa-net.maven.tools</groupId>
             <artifactId>unit-extension</artifactId>
         </dependency>
+        <!-- 3rd party -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
