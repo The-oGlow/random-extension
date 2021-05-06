@@ -7,6 +7,7 @@
         <groupId>com.glowa-net.maven.parent</groupId>
         <artifactId>global-pom</artifactId>
         <version>0.2.3-SNAPSHOT</version>
+        <relativePath/>
     </parent>
 
     <groupId>com.glowa-net.maven.tools</groupId>
@@ -44,6 +45,9 @@
     </ciManagement>
 
     <properties>
+        <!-- Gitlab Properties -->
+        <project.env.CI_PROJECT_ID>23076247</project.env.CI_PROJECT_ID>
+
         <!-- Sonar Properties -->
         <sonar.projectKey>ollily_random-extension</sonar.projectKey>
     </properties>
@@ -101,8 +105,8 @@
     <repositories>
         <repository>
             <id>coding.read</id>
-            <name>CoDinG jFrog Group</name>
-            <url>https://coding.jfrog.io/artifactory/groups</url>
+            <name>CoDinG Group</name>
+            <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
