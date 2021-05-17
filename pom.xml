@@ -46,7 +46,7 @@
 
     <properties>
         <!-- Gitlab Properties -->
-        <project.env.CI_PROJECT_ID>23076247</project.env.CI_PROJECT_ID>
+        <project.env.CI_PROJECT_ID>23292172</project.env.CI_PROJECT_ID>
 
         <!-- Sonar Properties -->
         <sonar.projectKey>ollily_random-extension</sonar.projectKey>
