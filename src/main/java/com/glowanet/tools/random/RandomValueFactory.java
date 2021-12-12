@@ -1,17 +1,27 @@
-package com.glowa_net.tools.random;
-
-import java.lang.reflect.InvocationTargetException;
+package com.glowanet.tools.random;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.InvocationTargetException;
+
 public final class RandomValueFactory {
 
     private static final Logger LOGGER         = LogManager.getLogger();
-    private static final String PACKAGE_PREFIX = "com.glowa_net.tools.random.RandomValue";
+    private static final String PACKAGE_PREFIX = "com.glowanet.tools.random.RandomValue";
+
+    private static final RandomValueFactory instance;
+
+    static {
+        instance = new RandomValueFactory();
+    }
 
     private RandomValueFactory() {
+    }
+
+    public static synchronized RandomValueFactory getInstance() {
+        return instance;
     }
 
     @SuppressWarnings("unchecked")

@@ -1,4 +1,4 @@
-package com.glowa_net.tools.random;
+package com.glowanet.tools.random;
 
 public interface IRandomValue<T> {
 

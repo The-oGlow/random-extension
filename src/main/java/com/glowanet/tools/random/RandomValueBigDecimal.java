@@ -1,8 +1,8 @@
-package com.glowa_net.tools.random;
-
-import java.math.BigDecimal;
+package com.glowanet.tools.random;
 
 import org.apache.commons.lang3.RandomUtils;
+
+import java.math.BigDecimal;
 
 public class RandomValueBigDecimal extends AbstractRandomValue<BigDecimal> {
 

@@ -1,4 +1,7 @@
-package com.glowa_net.tools.random;
+package com.glowanet.tools.random;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -8,9 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 
 public class RandomValueObject<T> extends AbstractRandomValue<T> {
 

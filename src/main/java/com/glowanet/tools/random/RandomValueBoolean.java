@@ -1,4 +1,4 @@
-package com.glowa_net.tools.random;
+package com.glowanet.tools.random;
 
 import org.apache.commons.lang3.RandomUtils;
 
