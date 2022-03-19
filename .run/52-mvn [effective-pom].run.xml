@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="mvn [deploy]" type="MavenRunConfiguration" factoryName="Maven" folderName="random-extension">
+  <configuration default="false" name="52-mvn [effective-pom]" type="MavenRunConfiguration" factoryName="Maven" folderName="random-extension">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -27,14 +27,12 @@
           </option>
           <option name="goals">
             <list>
-              <option value="deploy" />
+              <option value="help:effective-pom" />
             </list>
           </option>
           <option name="pomFileName" />
           <option name="profilesMap">
-            <map>
-              <entry key="artifact-release" value="true" />
-            </map>
+            <map />
           </option>
           <option name="resolveToWorkspace" value="true" />
           <option name="workingDirPath" value="$PROJECT_DIR$" />
