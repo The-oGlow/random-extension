@@ -28,11 +28,13 @@ To use, set in your `pom.xml`:
 .pom.xml
 [source,html,subs="attributes"]
 ----
-&lt;parent&gt;
-  &lt;groupId&gt;{proj_group}&lt;/groupId&gt;
-  &lt;artifactId&gt;{proj_module}&lt;/artifactId&gt;
-  &lt;version&gt;{proj_version}&lt;/version&gt;
-&lt;/parent&gt;
+&lt;dependencies>
+    &lt;dependency>
+        &lt;groupId&gt;{proj_group}&lt;/groupId&gt;
+        &lt;artifactId&gt;{proj_module}&lt;/artifactId&gt;
+        &lt;version&gt;{proj_version}&lt;/version&gt;
+    &lt;/dependency>
+&lt;/dependencies>
 ----
 
 == Author
