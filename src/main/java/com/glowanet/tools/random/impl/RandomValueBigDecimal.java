@@ -1,4 +1,4 @@
-package com.glowanet.tools.random;
+package com.glowanet.tools.random.impl;
 
 import org.apache.commons.lang3.RandomUtils;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class RandomValueBigDecimal extends AbstractRandomValue<BigDecimal> {
 
-    RandomValueBigDecimal() {
+    public RandomValueBigDecimal() {
         super(BigDecimal.class);
     }
 

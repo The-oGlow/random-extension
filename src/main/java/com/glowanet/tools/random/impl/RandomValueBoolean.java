@@ -1,10 +1,10 @@
-package com.glowanet.tools.random;
+package com.glowanet.tools.random.impl;
 
 import org.apache.commons.lang3.RandomUtils;
 
 public class RandomValueBoolean extends AbstractRandomValue<Boolean> {
 
-    RandomValueBoolean() {
+    public RandomValueBoolean() {
         super(Boolean.class);
     }
 

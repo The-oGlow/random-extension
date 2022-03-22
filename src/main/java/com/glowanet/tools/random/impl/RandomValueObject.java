@@ -1,5 +1,6 @@
-package com.glowanet.tools.random;
+package com.glowanet.tools.random.impl;
 
+import com.glowanet.tools.random.IRandomValueByType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
@@ -12,11 +13,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
-public class RandomValueObject<T> extends AbstractRandomValue<T> {
+public class RandomValueObject<T> extends AbstractRandomValue<T> implements IRandomValueByType<T> {
 
     public static final int COUNT_ALPHA = 5;
 
-    RandomValueObject(Class<T> typeOfT) {
+    public RandomValueObject(Class<T> typeOfT) {
         super(typeOfT);
     }
 
@@ -25,6 +26,7 @@ public class RandomValueObject<T> extends AbstractRandomValue<T> {
         throw new IllegalCallerException("Method is not allowed to call!");
     }
 
+    @Override
     public Object randomValue(Class<?> type) {
         return retrieveDefaultValueLegacy(type);
     }
