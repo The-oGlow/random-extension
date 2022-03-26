@@ -4,19 +4,22 @@ import org.apache.commons.lang3.RandomUtils;
 
 import java.math.BigDecimal;
 
-public class RandomValueBigDecimal extends AbstractRandomValue<BigDecimal> {
+/**
+ * Specific Implementation for {@code BigDecimal}.
+ */
+public class RandomStrategyBigDecimal extends AbstractRandomStrategy<BigDecimal> {
 
-    public RandomValueBigDecimal() {
+    public RandomStrategyBigDecimal() {
         super(BigDecimal.class);
     }
 
     @Override
-    public BigDecimal randomValue() {
+    public BigDecimal next() {
         return BigDecimal.valueOf(RandomUtils.nextLong());
     }
 
     @Override
-    public BigDecimal randomValue(BigDecimal rangeStart, BigDecimal rangeEnd) {
+    public BigDecimal next(BigDecimal rangeStart, BigDecimal rangeEnd) {
         return BigDecimal.valueOf(RandomUtils.nextLong(rangeStart.longValue(), rangeEnd.longValue()));
     }
 }
