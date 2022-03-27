@@ -1,8 +1,10 @@
 package com.glowanet.tools.random.legacy;
 
+import com.glowanet.tools.random.Primitive;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,8 +27,11 @@ public class LegacyStrategyPrimitive extends AbstractLegacyStrategy {
             result = RandomUtils.nextFloat();
         } else if (Long.TYPE.equals(type)) {
             result = RandomUtils.nextLong();
+        } else if (Character.TYPE.equals(type)) {
+            //noinspection UnnecessaryBoxing
+            result = Character.valueOf((char) RandomUtils.nextBytes(1)[0]);
         } else if (Byte.TYPE.equals(type)) {
-            result = RandomUtils.nextBytes(1);
+            result = RandomUtils.nextBytes(1)[0];
         } else {
             result = null;
         }
@@ -35,8 +40,9 @@ public class LegacyStrategyPrimitive extends AbstractLegacyStrategy {
 
     @Override
     public List<Type> supportedTypes() {
-        return List.of( //
-                Boolean.class, Integer.class, Double.class, Float.class, Long.class, Byte.class //
-        );
+        List<Type> types = new ArrayList<>();
+        types.add(Primitive.class);
+        types.addAll(Primitive.typesOfPrimitive());
+        return types;
     }
 }

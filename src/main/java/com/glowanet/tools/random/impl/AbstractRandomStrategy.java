@@ -1,13 +1,13 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.IRandomValue;
+import com.glowanet.tools.random.IRandomStrategy;
 
 /**
  * Base class for all random value types.
  *
  * @param <T> the type of the random value
  */
-public abstract class AbstractRandomStrategy<T> implements IRandomValue<T> {
+public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
 
     protected static final String RANGE_IS_NOT_SUPPORTED  = "Random value within a range is not supported!";
     public static final    String METHOD_IS_NOT_SUPPORTED = "Method is not supported!";
@@ -31,17 +31,5 @@ public abstract class AbstractRandomStrategy<T> implements IRandomValue<T> {
     @Override
     public T next(T rangeStart, T rangeEnd) {
         throw new UnsupportedOperationException(RANGE_IS_NOT_SUPPORTED);
-    }
-
-    @Deprecated(since = "0.2.0", forRemoval = true)
-    @Override
-    public final T randomValue() {
-        return next();
-    }
-
-    @Deprecated(since = "0.2.0", forRemoval = true)
-    @Override
-    public final T randomValue(T rangeStart, T rangeEnd) {
-        return next(rangeStart, rangeEnd);
     }
 }

@@ -1,9 +1,9 @@
 package com.glowanet.tools.random;
 
 /**
- *
+ * Interface for all legacy provider.
  */
-public interface ILegacyValue {
+public interface ILegacyStrategy extends ICommonStrategy {
 
     /**
      * @param type the class of the random value

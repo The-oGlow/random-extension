@@ -33,7 +33,7 @@ public class RandomStrategyObject<T> extends AbstractRandomStrategyByType<T> {
     }
 
     @Override
-    protected Object valueFromProvider(Class<?> valueClazz) {
+    protected Object valueByStaticDefinition(Class<T> valueClazz) {
         Object result = null;
 
         if (Boolean.class.equals(valueClazz)) {
