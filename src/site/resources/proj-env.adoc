@@ -1,7 +1,7 @@
 // project settings (from pom-file)
 // user data
 :proj_user: ollily
-:proj_user_org: ollily
+:proj_user_org: the-oglow
 :proj_author: Oliver Glowa
 :proj_user_email: coding at glowa-net dot com
 :proj_vcs_url: https://gitlab.com
@@ -19,3 +19,7 @@
 :proj_module: random-extension
 :proj_version: [latest release]
 :proj_description: Generate real random objects of any type.
+:proj_id_codacy: 89ab2f23c629425d921321edf406fd97
+:proj_id_coverity: -1
+:proj_id_openssf: -1
+
