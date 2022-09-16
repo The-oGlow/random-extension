@@ -32,7 +32,7 @@
     <!-- Section Properties -->
     <!-- ============================================== -->
     <properties>
-        <!-- Properties NEED not be defined here! -->
+        <!-- Properties CAN be defined here! -->
     </properties>
 
     <!-- Section Dependencies -->
