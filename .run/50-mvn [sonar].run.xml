@@ -13,7 +13,7 @@
             <map>
               <entry key="maven.test.failure.ignore" value="true" />
               <entry key="skipITs" value="false" />
-              <entry key="sonar.login" value="${SONAR_TOKEN_GITLAB}" />
+              <entry key="sonar.login" value="${SONAR_TOKEN}" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />
