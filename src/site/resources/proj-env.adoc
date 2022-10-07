@@ -19,6 +19,6 @@
 :proj_module: random-extension
 :proj_version: [latest release]
 :proj_description: Generate random values
-:proj_id_codacy: -1
+:proj_id_codacy: a5e2f8b4bb4846f4bf785751ef196fd9
 :proj_id_coverity: -1
-:proj_id_openssf: -1
+:proj_id_openssf: 6559
