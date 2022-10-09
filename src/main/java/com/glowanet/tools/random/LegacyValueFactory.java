@@ -24,15 +24,15 @@ public class LegacyValueFactory extends AbstractRandomValueFactory {
         instance = new LegacyValueFactory();
     }
 
+    private LegacyValueFactory() {
+        //nothing2do
+    }
+
     /**
      * @return the factory
      */
     public static synchronized LegacyValueFactory getInstance() {
         return instance;
-    }
-
-    private LegacyValueFactory() {
-        //nothing2do
     }
 
     @Override

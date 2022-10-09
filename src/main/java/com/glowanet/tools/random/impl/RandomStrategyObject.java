@@ -42,6 +42,8 @@ public class RandomStrategyObject<T> extends AbstractRandomStrategyByType<T> {
             result = RandomUtils.nextInt();
         } else if (String.class.equals(valueClazz)) {
             result = RandomStringUtils.randomAlphanumeric(DEFAULT_ALPHA_LENGTH);
+        } else {
+            result = null;
         }
         return result;
     }

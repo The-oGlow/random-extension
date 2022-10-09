@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class AbstractRandomValueFactory {
 
-    protected static final Logger LOGGER = LogManager.getLogger();
+    protected static final Logger LOGGER = LogManager.getLogger(); //NOSONAR java:S1312
 
     private boolean silent = true;
 

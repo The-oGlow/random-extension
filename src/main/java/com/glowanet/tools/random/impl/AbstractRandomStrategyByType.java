@@ -75,7 +75,7 @@ public abstract class AbstractRandomStrategyByType<T> extends AbstractRandomStra
             if (provider.isSupported(valueClazz)) {
                 result = provider.next(valueClazz);
             }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
             //ignore
         }
         return result;
