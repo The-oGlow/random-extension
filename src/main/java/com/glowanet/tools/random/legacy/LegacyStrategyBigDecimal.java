@@ -1,7 +1,5 @@
 package com.glowanet.tools.random.legacy;
 
-import org.apache.commons.lang3.RandomUtils;
-
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -18,9 +16,9 @@ public class LegacyStrategyBigDecimal extends AbstractLegacyStrategy {
     public Object next(Class<?> type) {
         Object result;
         if (BigInteger.class.equals(type)) {
-            result = BigInteger.valueOf(RandomUtils.nextInt());
+            result = BigInteger.valueOf(newRandom().nextInt());
         } else if (BigDecimal.class.equals(type)) {
-            result = BigDecimal.valueOf(RandomUtils.nextInt());
+            result = BigDecimal.valueOf(newRandom().nextInt());
         } else {
             result = null;
         }

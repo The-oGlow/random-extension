@@ -5,7 +5,6 @@ import com.glowanet.tools.random.legacy.LegacyStrategyBigDecimal;
 import com.glowanet.tools.random.legacy.LegacyStrategyDateTime;
 import com.glowanet.tools.random.legacy.LegacyStrategyPrimitive;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 
 import java.util.List;
 
@@ -37,9 +36,9 @@ public class RandomStrategyObject<T> extends AbstractRandomStrategyByType<T> {
         Object result = null;
 
         if (Boolean.class.equals(valueClazz)) {
-            result = RandomUtils.nextBoolean();
+            result = newRandom().nextBoolean();
         } else if (Number.class.equals(valueClazz)) {
-            result = RandomUtils.nextInt();
+            result = newRandom().nextInt();
         } else if (String.class.equals(valueClazz)) {
             result = RandomStringUtils.randomAlphanumeric(DEFAULT_ALPHA_LENGTH);
         } else {

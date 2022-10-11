@@ -1,7 +1,5 @@
 package com.glowanet.tools.random.impl;
 
-import org.apache.commons.lang3.RandomUtils;
-
 /**
  * Specific Implementation for {@code Boolean}.
  */
@@ -13,6 +11,6 @@ public class RandomStrategyBoolean extends AbstractRandomStrategy<Boolean> {
 
     @Override
     public Boolean next() {
-        return RandomUtils.nextBoolean();
+        return newRandom().nextBoolean();
     }
 }

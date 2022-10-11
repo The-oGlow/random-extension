@@ -1,7 +1,5 @@
 package com.glowanet.tools.random.legacy;
 
-import org.apache.commons.lang3.RandomUtils;
-
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.time.Duration;
@@ -34,15 +32,14 @@ public class LegacyStrategyDateTime extends AbstractLegacyStrategy {
         } else if (Time.class.equals(type)) {
             result = Date.from(Instant.now());
         } else if (Duration.class.equals(type)) {
-            result = Duration.of( //
-                    RandomUtils.nextInt(1, Instant.now().get(ChronoField.INSTANT_SECONDS)), //
-                    ChronoUnit.SECONDS //
+            result = Duration.of(
+                    newRandom().nextInt(Instant.now().get(ChronoField.SECOND_OF_MINUTE)), ChronoUnit.SECONDS
             );
         } else if (Period.class.equals(type)) {
             result = Period.of( //
-                    RandomUtils.nextInt(1, Instant.now().get(ChronoField.YEAR)),
-                    RandomUtils.nextInt(1, Instant.now().get(ChronoField.MONTH_OF_YEAR)), //
-                    RandomUtils.nextInt(1, Instant.now().get(ChronoField.DAY_OF_MONTH)) //
+                    newRandom().nextInt(Instant.now().get(ChronoField.YEAR)),
+                    newRandom().nextInt(Instant.now().get(ChronoField.MONTH_OF_YEAR)), //
+                    newRandom().nextInt(Instant.now().get(ChronoField.DAY_OF_MONTH)) //
             );
         } else if (Instant.class.equals(type)) {
             result = Instant.now();

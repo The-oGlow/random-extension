@@ -2,6 +2,8 @@ package com.glowanet.tools.random.impl;
 
 import com.glowanet.tools.random.IRandomStrategy;
 
+import java.security.SecureRandom;
+
 /**
  * Base class for all random value types.
  *
@@ -31,5 +33,12 @@ public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
     @Override
     public T next(T rangeStart, T rangeEnd) {
         throw new UnsupportedOperationException(RANGE_IS_NOT_SUPPORTED);
+    }
+
+    /**
+     * @return new random generator
+     */
+    protected SecureRandom newRandom() {
+        return new SecureRandom();
     }
 }
