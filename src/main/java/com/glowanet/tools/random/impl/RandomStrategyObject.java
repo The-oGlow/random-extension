@@ -31,9 +31,10 @@ public class RandomStrategyObject<T> extends AbstractRandomStrategyByType<T> {
         );
     }
 
+    @SuppressWarnings("java:S2245")
     @Override
     protected Object valueByStaticDefinition(Class<T> valueClazz) {
-        Object result = null;
+        Object result;
 
         if (Boolean.class.equals(valueClazz)) {
             result = newRandom().nextBoolean();
