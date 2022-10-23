@@ -6,6 +6,7 @@ import java.lang.reflect.Type;
 import java.security.SecureRandom;
 import java.util.List;
 
+@Deprecated
 public abstract class AbstractLegacyStrategy implements ILegacyStrategy {
 
     public abstract List<Type> supportedTypes();

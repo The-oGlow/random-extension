@@ -1,11 +1,16 @@
 package com.glowanet.tools.random;
 
+import com.glowanet.tools.random.exception.RandomException;
+
 /**
  * Interface for all random provider.
  *
  * @param <T> the type of the random value
  */
 public interface IRandomStrategy<T> extends ICommonStrategy {
+
+    String RANGE_IS_NOT_SUPPORTED  = "Random value within a range is not supported!";
+    String METHOD_IS_NOT_SUPPORTED = "Method is not supported!";
 
     /**
      * @return a random value of type {@code T}
@@ -18,7 +23,7 @@ public interface IRandomStrategy<T> extends ICommonStrategy {
      *
      * @return a random value of type {@code T} within {@code rangeStart} and {@code rangeEnd}, including boundaries
      *
-     * @throws UnsupportedOperationException a random value within a range is not supported
+     * @throws RandomException a random value within a range is not supported
      */
-    T next(T rangeStart, T rangeEnd) throws UnsupportedOperationException;
+    T next(T rangeStart, T rangeEnd) throws RandomException;
 }

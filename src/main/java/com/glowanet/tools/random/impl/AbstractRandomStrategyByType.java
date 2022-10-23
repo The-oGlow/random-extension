@@ -1,32 +1,22 @@
 package com.glowanet.tools.random.impl;
 
 import com.glowanet.tools.random.ILegacyStrategy;
+import com.glowanet.tools.random.IRandomStrategy;
 import com.glowanet.tools.random.IRandomStrategyByType;
-import com.glowanet.tools.random.legacy.AbstractLegacyStrategy;
+import com.glowanet.tools.random.exception.RandomUnsupportedException;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
+import java.security.SecureRandom;
 import java.util.List;
 
-public abstract class AbstractRandomStrategyByType<T> extends AbstractRandomStrategy<T> implements IRandomStrategyByType<T> {
-    /**
-     * @param typeOfT the type of the random value
-     */
-    protected AbstractRandomStrategyByType(Class<T> typeOfT) {
-        super(typeOfT);
+public abstract class AbstractRandomStrategyByType extends AbstractRandomStrategy<Object> implements IRandomStrategyByType {
+    protected AbstractRandomStrategyByType() {
+        super(null);
     }
 
     @Override
-    public T next() {
-        throw new UnsupportedOperationException(METHOD_IS_NOT_SUPPORTED);
-    }
-
-    @Override
-    public Class<T> getTypeOfT() {
-        throw new UnsupportedOperationException(METHOD_IS_NOT_SUPPORTED);
-    }
-
-    @Override
-    public Object next(Class<T> valueClazz) {
+    public Object next(Class<Object> valueClazz) {
         Object result = valueByStaticDefinition(valueClazz);
         if (result == null) {
             result = loopThruProvider(valueClazz);
@@ -34,24 +24,51 @@ public abstract class AbstractRandomStrategyByType<T> extends AbstractRandomStra
         return result;
     }
 
+    @Override
+    public Class<Object> getTypeOfT() {
+        throw new RandomUnsupportedException(IRandomStrategy.METHOD_IS_NOT_SUPPORTED);
+    }
+
+    @Override
+    public boolean isSupported(Class<?> type) {
+        return supportedTypes().stream().anyMatch(st -> st.equals(type));
+    }
+
+    @Override
+    public List<Type> supportedTypes() {
+        return List.of();
+    }
+
     /**
      * @param valueClazz the type of the random value
      *
      * @return a random value of any type
      */
-    protected abstract Object valueByStaticDefinition(Class<T> valueClazz);
+    protected Object valueByStaticDefinition(Class<Object> valueClazz) {
+        return null;
+    }
 
     /**
      * @return the list of random provider
      */
-    protected abstract List<Class<? extends AbstractLegacyStrategy>> getProviders();
+    protected List<Class<? extends AbstractRandomStrategy<?>>> getProviders() {
+        return List.of();
+    }
+
+    /**
+     * @return new random generator
+     */
+    @Override
+    protected SecureRandom newRandom() {
+        return new SecureRandom();
+    }
 
     /**
      * @param valueClazz the type of the random value
      *
      * @return a random value of any type
      */
-    protected Object loopThruProvider(Class<T> valueClazz) {
+    protected Object loopThruProvider(Class<Object> valueClazz) {
         Object result = null;
         for (Class<?> providerClazz : getProviders()) {
             result = valueFromProviderLoop(providerClazz, valueClazz);
@@ -68,7 +85,7 @@ public abstract class AbstractRandomStrategyByType<T> extends AbstractRandomStra
      *
      * @return a random value of any type
      */
-    private Object valueFromProviderLoop(Class<?> providerClazz, Class<T> valueClazz) {
+    private Object valueFromProviderLoop(Class<?> providerClazz, Class<Object> valueClazz) {
         Object result = null;
         try {
             ILegacyStrategy provider = (ILegacyStrategy) providerClazz.getDeclaredConstructor((Class<?>[]) null).newInstance((Object[]) null);

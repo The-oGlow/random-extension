@@ -1,19 +1,13 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.legacy.AbstractLegacyStrategy;
-import com.glowanet.tools.random.legacy.LegacyStrategyBigDecimal;
-import com.glowanet.tools.random.legacy.LegacyStrategyDateTime;
-import com.glowanet.tools.random.legacy.LegacyStrategyPrimitive;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 
 /**
  * This is the "fallback" class, trying to create a random value with some legacy features.
- *
- * @param <T> the type of the random value
  */
-public class RandomStrategyObject<T> extends AbstractRandomStrategyByType<T> {
+public class RandomStrategyObject extends AbstractRandomStrategyByType {
 
     /**
      * Standard length of alphanumeric values.
@@ -21,19 +15,18 @@ public class RandomStrategyObject<T> extends AbstractRandomStrategyByType<T> {
     public static final int DEFAULT_ALPHA_LENGTH = 5;
 
     public RandomStrategyObject() {
-        super(null);
+        super();
     }
 
     @Override
-    protected List<Class<? extends AbstractLegacyStrategy>> getProviders() {
+    protected List<Class<? extends AbstractRandomStrategy<?>>> getProviders() {
         return List.of(
-                LegacyStrategyBigDecimal.class, LegacyStrategyPrimitive.class, LegacyStrategyDateTime.class
+                RandomStrategyBigDecimal.class, RandomStrategyPrimitive.class, RandomStrategyDateTime.class
         );
     }
 
-    @SuppressWarnings("java:S2245")
     @Override
-    protected Object valueByStaticDefinition(Class<T> valueClazz) {
+    protected Object valueByStaticDefinition(Class<Object> valueClazz) {
         Object result;
 
         if (Boolean.class.equals(valueClazz)) {

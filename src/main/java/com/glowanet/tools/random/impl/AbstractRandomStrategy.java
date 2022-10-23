@@ -1,7 +1,9 @@
 package com.glowanet.tools.random.impl;
 
 import com.glowanet.tools.random.IRandomStrategy;
+import com.glowanet.tools.random.exception.RandomUnsupportedException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.security.SecureRandom;
 
 /**
@@ -10,9 +12,6 @@ import java.security.SecureRandom;
  * @param <T> the type of the random value
  */
 public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
-
-    protected static final String RANGE_IS_NOT_SUPPORTED  = "Random value within a range is not supported!";
-    public static final    String METHOD_IS_NOT_SUPPORTED = "Method is not supported!";
 
     private final Class<T> typeOfT;
 
@@ -31,8 +30,13 @@ public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
     }
 
     @Override
+    public T next() {
+        throw new RandomUnsupportedException(IRandomStrategy.RANGE_IS_NOT_SUPPORTED);
+    }
+
+    @Override
     public T next(T rangeStart, T rangeEnd) {
-        throw new UnsupportedOperationException(RANGE_IS_NOT_SUPPORTED);
+        throw new RandomUnsupportedException(IRandomStrategy.RANGE_IS_NOT_SUPPORTED);
     }
 
     /**
@@ -41,4 +45,17 @@ public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
     protected SecureRandom newRandom() {
         return new SecureRandom();
     }
+
+    protected <N> N newInstance(Class<N> newObjectClazz) {
+        return newInstance(newObjectClazz, (Class<?>[]) null, (Object[]) null);
+    }
+
+    protected <N> N newInstance(Class<N> newObjectClazz, Class<?>[] parameterTypes, Object[] initargs) {
+        try {
+            return newObjectClazz.getConstructor(parameterTypes).newInstance(initargs);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            return null;
+        }
+    }
+
 }

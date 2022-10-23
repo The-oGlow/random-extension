@@ -1,7 +1,5 @@
 package com.glowanet.tools.random;
 
-import com.glowanet.tools.random.impl.RandomStrategyObject;
-
 /**
  * <p>
  * Factory to manage the different provider to create random values.
@@ -24,7 +22,6 @@ import com.glowanet.tools.random.impl.RandomStrategyObject;
  * }</blockquote>
  *
  * @see #getProvider(Class)
- * @see #setAutoLegacy(boolean)
  */
 public final class RandomValueFactory extends AbstractRandomValueFactory {
 
@@ -33,7 +30,7 @@ public final class RandomValueFactory extends AbstractRandomValueFactory {
 
     private static final RandomValueFactory instance;
 
-    private boolean autoLegacy = true;
+//    private boolean autoLegacy = true;
 
     static {
         instance = new RandomValueFactory();
@@ -53,17 +50,16 @@ public final class RandomValueFactory extends AbstractRandomValueFactory {
     /**
      * @param autoLegacy TRUE = With legacy mode, else FALSE (default=TRUE)
      */
-    public void setAutoLegacy(boolean autoLegacy) {
-        this.autoLegacy = autoLegacy;
-    }
+//    public void setAutoLegacy(boolean autoLegacy) {
+//        this.autoLegacy = autoLegacy;
+//    }
 
     /**
      * @return TRUE = With legacy mode, else FALSE
      */
-    public boolean isAutoLegacy() {
-        return autoLegacy;
-    }
-
+//    public boolean isAutoLegacy() {
+//        return autoLegacy;
+//    }
     @Override
     protected String getProviderLocation() {
         return DEFAULT_PREFIX_PACKAGE + "." + DEFAULT_PREFIX_CLASS;
@@ -72,17 +68,17 @@ public final class RandomValueFactory extends AbstractRandomValueFactory {
     @Override
     public IRandomStrategy<?> getProvider(Class<?> valueClazz) {
         ICommonStrategy providerInstance = generateRandomProvider(valueClazz);
-        if (autoLegacy && (providerInstance == null)) {
-            providerInstance = getLegacyProvider();
-        }
+//        if (autoLegacy && (providerInstance == null)) {
+//            providerInstance = getLegacyProvider();
+//        }
         return (IRandomStrategy<?>) providerInstance;
     }
 
-    /**
-     * @return a random provider, using legacy methods
-     */
-    private RandomStrategyObject<?> getLegacyProvider() {
-        return (RandomStrategyObject<?>) generateRandomProvider(Object.class);
-    }
+//    /**
+//     * @return a random provider, using legacy methods
+//     */
+//    private RandomStrategyObject getLegacyProvider() {
+//        return (RandomStrategyObject) generateRandomProvider(Object.class);
+//    }
 
 }

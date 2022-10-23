@@ -2,7 +2,10 @@ package com.glowanet.tools.random;
 
 /**
  * Interface for all legacy provider.
+ *
+ * @deprecated
  */
+@Deprecated
 public interface ILegacyStrategy extends ICommonStrategy {
 
     /**

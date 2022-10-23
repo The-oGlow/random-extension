@@ -12,8 +12,9 @@ package com.glowanet.tools.random;
  * }</blockquote>
  *
  * @see #getProvider(Class)
+ * @deprecated
  */
-
+@Deprecated
 public class LegacyValueFactory extends AbstractRandomValueFactory {
     public static final String DEFAULT_PREFIX_PACKAGE = LegacyValueFactory.class.getPackageName() + ".legacy";
     public static final String DEFAULT_PREFIX_CLASS   = "LegacyStrategy";
