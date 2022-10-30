@@ -1,5 +1,6 @@
 package com.glowanet.tools.random.impl;
 
+import com.glowanet.tools.random.IRandomStrategy;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
@@ -19,14 +20,17 @@ public class RandomStrategyObject extends AbstractRandomStrategyByType {
     }
 
     @Override
-    protected List<Class<? extends AbstractRandomStrategy<?>>> getProviders() {
+    protected List<Class<? extends IRandomStrategy<?>>> getProviders() {
+        // NOTE: The order is important!
         return List.of(
-                RandomStrategyBigDecimal.class, RandomStrategyPrimitive.class, RandomStrategyDateTime.class
+                RandomStrategyPrimitive.class,
+                RandomStrategyDateTime.class,
+                RandomStrategyBigDecimal.class
         );
     }
 
     @Override
-    protected Object valueByStaticDefinition(Class<Object> valueClazz) {
+    protected Object valueByStaticDefinition(Class<?> valueClazz) {
         Object result;
 
         if (Boolean.class.equals(valueClazz)) {

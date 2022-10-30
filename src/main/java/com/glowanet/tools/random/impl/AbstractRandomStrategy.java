@@ -22,21 +22,19 @@ public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
         this.typeOfT = typeOfT;
     }
 
-    /**
-     * @return the type of the random value
-     */
+    @Override
     public Class<T> getTypeOfT() {
         return typeOfT;
     }
 
     @Override
     public T next() {
-        throw new RandomUnsupportedException(IRandomStrategy.RANGE_IS_NOT_SUPPORTED);
+        throw new RandomUnsupportedException(String.format(IRandomStrategy.RANGE_IS_NOT_SUPPORTED, getClass()));
     }
 
     @Override
     public T next(T rangeStart, T rangeEnd) {
-        throw new RandomUnsupportedException(IRandomStrategy.RANGE_IS_NOT_SUPPORTED);
+        throw new RandomUnsupportedException(String.format(IRandomStrategy.RANGE_IS_NOT_SUPPORTED, getClass()));
     }
 
     /**
@@ -46,14 +44,28 @@ public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
         return new SecureRandom();
     }
 
+    /**
+     * @param newObjectClazz class of {@code <N>}
+     * @param <N>            type of the new instance
+     *
+     * @return a new instance of {@code newObjectClazz}
+     */
     protected <N> N newInstance(Class<N> newObjectClazz) {
-        return newInstance(newObjectClazz, (Class<?>[]) null, (Object[]) null);
+        return newInstance(newObjectClazz, null, null);
     }
 
+    /**
+     * @param newObjectClazz class of {@code N}
+     * @param parameterTypes types of {@code initargs}
+     * @param initargs       values for the new instance
+     * @param <N>            type of the new instance
+     *
+     * @return a new instance of {@code newObjectClazz}
+     */
     protected <N> N newInstance(Class<N> newObjectClazz, Class<?>[] parameterTypes, Object[] initargs) {
         try {
             return newObjectClazz.getConstructor(parameterTypes).newInstance(initargs);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
             return null;
         }
     }

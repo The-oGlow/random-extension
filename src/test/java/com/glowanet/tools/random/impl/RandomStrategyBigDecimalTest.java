@@ -1,11 +1,10 @@
 package com.glowanet.tools.random.impl;
 
-import org.hamcrest.MatchersExtend;
-
 import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.MatchersExtend.betweenWithBound;
 
 public class RandomStrategyBigDecimalTest extends AbstractRandomStrategyTest<BigDecimal, RandomStrategyBigDecimal> {
 
@@ -23,19 +22,9 @@ public class RandomStrategyBigDecimalTest extends AbstractRandomStrategyTest<Big
         return BigDecimal.valueOf(MAX);
     }
 
-//    @Override
-//    @Test
-//    public void testNextWithRange() {
-//        BigDecimal actual = o2ST.next(rangeStart(), rangeEnd());
-//
-//        MatcherAssert.assertThat(actual, Matchers.instanceOf(valueClazz));
-//    }
-
     @Override
     protected void verifyInRange(BigDecimal actual) {
         assertThat(actual, notNullValue());
-        MatchersExtend.betweenWithBound(rangeStart(), rangeEnd());
-
-        assertThat(actual, MatchersExtend.betweenWithBound(rangeStart(), rangeEnd()));
+        assertThat(actual, betweenWithBound(rangeStart(), rangeEnd()));
     }
 }

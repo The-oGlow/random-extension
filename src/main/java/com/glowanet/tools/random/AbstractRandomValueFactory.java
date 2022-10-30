@@ -11,7 +11,9 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class AbstractRandomValueFactory {
 
-    protected static final Logger LOGGER = LogManager.getLogger(); //NOSONAR java:S1312
+    public static final String NULL_NOT_SUPPORTED = "Null is not supported as class!";
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private boolean silent = true;
 
@@ -26,8 +28,16 @@ public abstract class AbstractRandomValueFactory {
         this.silent = silent;
     }
 
+    /**
+     * @return the classpath to the provider
+     */
     protected abstract String getProviderLocation();
 
+    /**
+     * @param valueClazz the type of the random values
+     *
+     * @return the provider, which creates random values of {@code valueClazz}
+     */
     public abstract ICommonStrategy getProvider(Class<?> valueClazz);
 
     /**

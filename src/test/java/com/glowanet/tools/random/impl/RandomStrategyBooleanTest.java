@@ -2,8 +2,9 @@ package com.glowanet.tools.random.impl;
 
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
 import com.glowanet.util.junit.TestResultHelper;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.oneOf;
 
 public class RandomStrategyBooleanTest extends AbstractRandomStrategyTest<Boolean, RandomStrategyBoolean> {
 
@@ -24,7 +25,7 @@ public class RandomStrategyBooleanTest extends AbstractRandomStrategyTest<Boolea
     @Override
     public void testNext() {
         Boolean actual = o2ST.next();
-        MatcherAssert.assertThat(actual, Matchers.oneOf(true, false));
+        assertThat(actual, oneOf(true, false));
     }
 
     @Override

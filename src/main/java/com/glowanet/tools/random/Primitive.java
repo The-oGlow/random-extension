@@ -11,6 +11,9 @@ public class Primitive {
     private Primitive() {
     }
 
+    /**
+     * @return list of all primitive java types
+     */
     public static List<Type> typesOfPrimitive() {
         return List.of( //
                 Boolean.class, Integer.class, Double.class, Float.class, Long.class, Character.class, Byte.class, //

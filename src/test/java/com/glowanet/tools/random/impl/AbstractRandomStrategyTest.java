@@ -1,5 +1,6 @@
 package com.glowanet.tools.random.impl;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,9 +19,9 @@ public abstract class AbstractRandomStrategyTest<T, ST extends AbstractRandomStr
     protected static final int    MIN                     = 1;
     protected static final int    MAX                     = 10000;
 
-    protected ST        o2ST;
-    protected Class<ST> strategyClazz;
-    protected Class<T>  valueClazz;
+    protected       ST        o2ST;
+    protected final Class<ST> strategyClazz;
+    protected final Class<T>  valueClazz;
 
     protected AbstractRandomStrategyTest(Class<ST> strategyClazz, Class<T> valueClazz) {
         this.strategyClazz = strategyClazz;
@@ -65,12 +66,12 @@ public abstract class AbstractRandomStrategyTest<T, ST extends AbstractRandomStr
     }
 
     protected <TC> TC newInstance(Class<TC> typeClazz) {
-        return newInstance(typeClazz, (Class<?>[]) null, (Object[]) null);
+        return newInstance(typeClazz, null, null);
     }
 
     protected <TC> TC newInstance(Class<TC> typeClazz, Class<?>[] parameterTypes, Object[] initargs) {
         try {
-            return typeClazz.getConstructor(parameterTypes).newInstance(initargs);
+            return ConstructorUtils.invokeConstructor(typeClazz, initargs, parameterTypes);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             return null;
         }

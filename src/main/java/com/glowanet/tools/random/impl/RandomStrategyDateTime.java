@@ -19,34 +19,35 @@ import java.util.List;
 public class RandomStrategyDateTime extends AbstractRandomStrategyByType {
 
     @Override
-    public Object next(Class<Object> type) {
+    public <T> T next(Class<?> valueClazz) {
         Object result;
-        if (LocalDateTime.class.equals(type)) {
+        if (LocalDateTime.class.equals(valueClazz)) {
             result = LocalDateTime.now();
-        } else if (LocalDate.class.equals(type)) {
+        } else if (LocalDate.class.equals(valueClazz)) {
             result = LocalDate.now();
-        } else if (LocalTime.class.equals(type)) {
+        } else if (LocalTime.class.equals(valueClazz)) {
             result = LocalTime.now();
-        } else if (Date.class.equals(type)) {
+        } else if (Date.class.equals(valueClazz)) {
             result = Date.from(Instant.now());
-        } else if (Time.class.equals(type)) {
+        } else if (Time.class.equals(valueClazz)) {
             result = Date.from(Instant.now());
-        } else if (Duration.class.equals(type)) {
+        } else if (Duration.class.equals(valueClazz)) {
             result = Duration.of(
                     newRandom().nextInt(Instant.now().get(ChronoField.SECOND_OF_MINUTE)), ChronoUnit.SECONDS
             );
-        } else if (Period.class.equals(type)) {
+        } else if (Period.class.equals(valueClazz)) {
             result = Period.of( //
                     newRandom().nextInt(Instant.now().get(ChronoField.YEAR)),
                     newRandom().nextInt(Instant.now().get(ChronoField.MONTH_OF_YEAR)), //
                     newRandom().nextInt(Instant.now().get(ChronoField.DAY_OF_MONTH)) //
             );
-        } else if (Instant.class.equals(type)) {
+        } else if (Instant.class.equals(valueClazz)) {
             result = Instant.now();
         } else {
             result = null;
         }
-        return result;
+        //noinspection unchecked
+        return (T) result;
     }
 
     @Override

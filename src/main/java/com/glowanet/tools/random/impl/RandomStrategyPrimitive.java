@@ -8,37 +8,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creates random values for primitive types, using {@code RandomUtils}.
+ * Creates random values for {@link Primitive}, using {@link RandomUtils}.
  *
+ * @see Primitive
  * @see RandomUtils
  */
 public class RandomStrategyPrimitive extends AbstractRandomStrategyByType {
 
     @Override
-    public Object next(Class<Object> type) {
+    public <T> T next(Class<?> valueClazz) {
         Object result;
-        if (Boolean.TYPE.equals(type)) {
+        if (Boolean.TYPE.equals(valueClazz)) {
             result = newRandom().nextBoolean();
-        } else if (Integer.TYPE.equals(type)) {
+        } else if (Integer.TYPE.equals(valueClazz)) {
             result = newRandom().nextInt();
-        } else if (Double.TYPE.equals(type)) {
+        } else if (Double.TYPE.equals(valueClazz)) {
             result = newRandom().nextDouble();
-        } else if (Float.TYPE.equals(type)) {
+        } else if (Float.TYPE.equals(valueClazz)) {
             result = newRandom().nextFloat();
-        } else if (Long.TYPE.equals(type)) {
+        } else if (Long.TYPE.equals(valueClazz)) {
             result = newRandom().nextLong();
-        } else if (Character.TYPE.equals(type)) {
+        } else if (Character.TYPE.equals(valueClazz)) {
             byte[] bytes = new byte[1];
             newRandom().nextBytes(bytes);
-            result = Character.valueOf((char) bytes[0]);
-        } else if (Byte.TYPE.equals(type)) {
+            result = (char) bytes[0];
+        } else if (Byte.TYPE.equals(valueClazz)) {
             byte[] bytes = new byte[1];
             newRandom().nextBytes(bytes);
             result = bytes[0];
         } else {
             result = null;
         }
-        return result;
+        //noinspection unchecked
+        return (T) result;
     }
 
     @Override
