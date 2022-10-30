@@ -3,6 +3,7 @@ package com.glowanet.tools.random.impl;
 import com.glowanet.tools.random.IRandomStrategy;
 import com.glowanet.tools.random.IRandomStrategyByType;
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
+import com.glowanet.util.reflect.ReflectionHelper;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,20 +23,6 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
 
     protected AbstractRandomStrategyByType() {
         super(null);
-    }
-
-    @Override
-    public <T> T next(Class<?> valueClazz) {
-        Object result = valueByStaticDefinition(valueClazz);
-        if (result == null) {
-            result = loopThruProvider(valueClazz);
-        }
-        if (valueClazz != null && result != null && valueClazz.isAssignableFrom(result.getClass())) {
-            //noinspection unchecked
-            return (T) result;
-        } else {
-            throw new RandomUnsupportedException(String.format(RANDOM_VALUE_FOR_CLAZZ_IS_NOT_GENERATED, valueClazz));
-        }
     }
 
     /**
@@ -54,17 +42,29 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
     }
 
     @Override
-    public List<Type> supportedTypes() {
-        return List.of();
+    public <T> T next(Class<?> valueClazz) {
+        Object result = valueByStaticDefinition(valueClazz);
+        if (result == null) {
+            result = loopThruProvider(valueClazz);
+        }
+        if (valueClazz != null && result != null && valueClazz.isAssignableFrom(result.getClass())) {
+            //noinspection unchecked
+            return (T) result;
+        } else {
+            throw new RandomUnsupportedException(String.format(RANDOM_VALUE_FOR_CLAZZ_IS_NOT_GENERATED, valueClazz));
+        }
     }
 
-    /**
-     * @param valueClazz the type of the random value
-     *
-     * @return a random value of any type
-     */
-    protected Object valueByStaticDefinition(Class<?> valueClazz) {
-        return null;
+    @Override
+    public List<Type> supportedTypes() {
+        List<Type> listSupportedTypes = new ArrayList<>();
+        for (Class<? extends IRandomStrategy<?>> providerClazz : getProviders()) {
+            IRandomStrategy<?> providerInstance = ReflectionHelper.newInstance(providerClazz);
+            if (providerInstance != null && IRandomStrategyByType.class.isAssignableFrom(providerInstance.getClass())) {
+                listSupportedTypes.addAll(((IRandomStrategyByType) providerInstance).supportedTypes());
+            }
+        }
+        return listSupportedTypes;
     }
 
     /**
@@ -72,14 +72,6 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
      */
     protected List<Class<? extends IRandomStrategy<?>>> getProviders() { //NOSONAR java:S1452
         return List.of();
-    }
-
-    /**
-     * @return new random generator
-     */
-    @Override
-    protected SecureRandom newRandom() {
-        return new SecureRandom();
     }
 
     /**
@@ -96,6 +88,14 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
             }
         }
         return result;
+    }
+
+    /**
+     * @return new random generator
+     */
+    @Override
+    protected SecureRandom newRandom() {
+        return new SecureRandom();
     }
 
     /**
@@ -121,4 +121,14 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
         }
         return result;
     }
+
+    /**
+     * @param valueClazz the type of the random value
+     *
+     * @return a random value of any type
+     */
+    protected Object valueByStaticDefinition(Class<?> valueClazz) {
+        return null;
+    }
+
 }

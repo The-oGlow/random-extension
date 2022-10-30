@@ -8,6 +8,9 @@ import static org.hamcrest.MatchersExtend.betweenWithBound;
 
 public class RandomStrategyBigDecimalTest extends AbstractRandomStrategyTest<BigDecimal, RandomStrategyBigDecimal> {
 
+    private static final long MIN = 1;
+    private static final long MAX = Integer.MAX_VALUE;
+
     public RandomStrategyBigDecimalTest() {
         super(RandomStrategyBigDecimal.class, BigDecimal.class);
     }

@@ -1,10 +1,9 @@
 package com.glowanet.tools.random.impl;
 
-import org.apache.commons.lang3.reflect.ConstructorUtils;
+import com.glowanet.util.reflect.ReflectionHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.security.SecureRandom;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,9 +14,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public abstract class AbstractRandomStrategyTest<T, ST extends AbstractRandomStrategy<T>> {
 
-    protected static final String VERIFY_IS_NOT_SUPPORTED = "Verify the random value is not supported!";
-    protected static final int    MIN                     = 1;
-    protected static final int    MAX                     = 10000;
+    protected static final String        VERIFY_IS_NOT_SUPPORTED = "Verify the random value is not supported!";
+    protected static final String        OVERRIDE_METHOD         = "Default method not supported. Please override!";
+    protected static final Class<Object> TEST_CLAZZ_OBJECT       = Object.class;
 
     protected       ST        o2ST;
     protected final Class<ST> strategyClazz;
@@ -30,7 +29,7 @@ public abstract class AbstractRandomStrategyTest<T, ST extends AbstractRandomStr
 
     @Before
     public void setUp() {
-        o2ST = prepO2T();
+        o2ST = prepareO2T();
         assertThat(o2ST, instanceOf(strategyClazz));
     }
 
@@ -65,28 +64,16 @@ public abstract class AbstractRandomStrategyTest<T, ST extends AbstractRandomStr
         assertThat(actual, notNullValue());
     }
 
-    protected <TC> TC newInstance(Class<TC> typeClazz) {
-        return newInstance(typeClazz, null, null);
-    }
-
-    protected <TC> TC newInstance(Class<TC> typeClazz, Class<?>[] parameterTypes, Object[] initargs) {
-        try {
-            return ConstructorUtils.invokeConstructor(typeClazz, initargs, parameterTypes);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            return null;
-        }
-    }
-
-    protected ST prepO2T() {
-        return newInstance(strategyClazz);
+    protected ST prepareO2T() {
+        return ReflectionHelper.newInstance(strategyClazz);
     }
 
     protected T rangeStart() {
-        return newInstance(valueClazz, new Class[]{int.class}, new Object[]{1});
+        throw new UnsupportedOperationException(OVERRIDE_METHOD);
     }
 
     protected T rangeEnd() {
-        return newInstance(valueClazz, new Class[]{int.class}, new Object[]{100});
+        throw new UnsupportedOperationException(OVERRIDE_METHOD);
     }
 
     protected void verifyInRange(T actual) {

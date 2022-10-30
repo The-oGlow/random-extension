@@ -18,7 +18,7 @@ public class RandomStrategyBigDecimal extends AbstractRandomStrategy<BigDecimal>
 
     @Override
     public BigDecimal next(BigDecimal rangeStart, BigDecimal rangeEnd) {
-        var min = rangeStart.longValue();
+        var min = rangeStart.intValue();
         var max = rangeEnd.intValue();
         return BigDecimal.valueOf(newRandom().nextInt(max - ((int) min) + 1) + min);
     }

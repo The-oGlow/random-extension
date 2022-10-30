@@ -12,13 +12,20 @@ import static org.hamcrest.Matchers.hasSize;
 
 public class PrimitiveTest {
 
-    private static final int NO_OF_CLASSES = 14;
+    private static final int NO_OF_PRIMITIVES = 14;
 
     @Test
-    public void typesOfPrimitive() {
+    public void testTypesOfPrimitive() {
         List<Type> actual = Primitive.typesOfPrimitive();
 
         assertThat(actual, Matchers.notNullValue());
-        assertThat(actual, hasSize(greaterThanOrEqualTo(NO_OF_CLASSES)));
+        assertThat(actual, hasSize(greaterThanOrEqualTo(NO_OF_PRIMITIVES)));
+    }
+
+    @Test
+    public void testSize() {
+        int actual = Primitive.size();
+
+        assertThat(actual, greaterThanOrEqualTo(NO_OF_PRIMITIVES));
     }
 }

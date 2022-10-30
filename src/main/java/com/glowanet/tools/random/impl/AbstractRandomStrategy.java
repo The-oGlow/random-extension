@@ -3,7 +3,6 @@ package com.glowanet.tools.random.impl;
 import com.glowanet.tools.random.IRandomStrategy;
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.security.SecureRandom;
 
 /**
@@ -43,31 +42,4 @@ public abstract class AbstractRandomStrategy<T> implements IRandomStrategy<T> {
     protected SecureRandom newRandom() {
         return new SecureRandom();
     }
-
-    /**
-     * @param newObjectClazz class of {@code <N>}
-     * @param <N>            type of the new instance
-     *
-     * @return a new instance of {@code newObjectClazz}
-     */
-    protected <N> N newInstance(Class<N> newObjectClazz) {
-        return newInstance(newObjectClazz, null, null);
-    }
-
-    /**
-     * @param newObjectClazz class of {@code N}
-     * @param parameterTypes types of {@code initargs}
-     * @param initargs       values for the new instance
-     * @param <N>            type of the new instance
-     *
-     * @return a new instance of {@code newObjectClazz}
-     */
-    protected <N> N newInstance(Class<N> newObjectClazz, Class<?>[] parameterTypes, Object[] initargs) {
-        try {
-            return newObjectClazz.getConstructor(parameterTypes).newInstance(initargs);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
-            return null;
-        }
-    }
-
 }

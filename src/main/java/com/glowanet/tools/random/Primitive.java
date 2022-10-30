@@ -20,4 +20,8 @@ public class Primitive {
                 boolean.class, int.class, double.class, float.class, long.class, char.class, byte.class
         );
     }
+
+    public static int size() {
+        return typesOfPrimitive().size();
+    }
 }
