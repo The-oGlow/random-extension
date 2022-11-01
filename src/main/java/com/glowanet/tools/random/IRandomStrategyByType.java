@@ -1,6 +1,5 @@
 package com.glowanet.tools.random;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -18,18 +17,18 @@ public interface IRandomStrategyByType extends IRandomStrategy<Object> {
     <T> T next(Class<?> valueClazz);
 
     /**
-     * @param type A class
+     * @param valueClazz A class
      *
      * @return true=the {@code type} is supported, else false
      *
      * @see #supportedTypes()
      */
-    boolean isSupported(Class<?> type);
+    boolean isSupported(Class<?> valueClazz);
 
     /**
      * @return list of supported types
      *
      * @see #isSupported(Class)
      */
-    List<Type> supportedTypes();
+    List<Class<?>> supportedTypes();
 }

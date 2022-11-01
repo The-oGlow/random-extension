@@ -1,47 +1,83 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.Primitive;
+import com.glowanet.reflect.Primitive;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.nullValue;
 
+@RunWith(Parameterized.class)
 public class RandomStrategyPrimitiveTest<T> extends AbstractRandomStrategyByTypeTest<T, RandomStrategyPrimitive> {
 
     public RandomStrategyPrimitiveTest() {
         super(RandomStrategyPrimitive.class, null);
     }
 
+    @Parameterized.Parameters(name = "{index} primitiveType={0}, expected={1}")
+    public static List<Object[]> data() {
+        List<Object[]> testData = new ArrayList<>();
+        for (var primClazz : Primitive.typesOfPrimitiveAll()) {
+            testData.add(new Object[]{primClazz, true});
+        }
+        testData.add(new Object[]{RandomStrategyPrimitiveTest.class, false});
+        testData.add(new Object[]{null, false});
+        return testData;
+    }
+
+    @Parameterized.Parameter
+    public Class<?> primType;
+
+    @Parameterized.Parameter(1)
+    public boolean primExpectedResult;
+
+    @Override
+    protected Matcher<Iterable<?>> expectedSupportedTypes() {
+        return containsInAnyOrder(
+                RandomStrategyPrimitive.SUPP_TYPES.toArray()
+        );
+    }
+
+    @Override
+    protected Matcher<Iterable<?>> expectedGetProviders() {
+        return emptyIterable();
+    }
+
     @Override
     protected Matcher<Boolean> expectedIsSupported() {
-        return equalTo(true);
+        return equalTo(primExpectedResult);
     }
 
     @Override
-    protected Class<?> actualIsSupported() {
-        return Integer.class;
+    protected Class<?> valuesIsSupported() {
+        return primType;
     }
 
     @Override
-    protected Matcher<Collection<?>> expectedSupportedTypes() {
-        return hasSize(allOf(greaterThan(0), lessThanOrEqualTo(Primitive.size() + 1)));
+    protected Matcher<T> expectedNextValueFromProvider() {
+        return anyOf(nullValue(), instanceOf(primType));
     }
 
     @Override
-    protected Matcher<Collection<?>> expectedGetProviders() {
-        return hasSize(0);
+    protected Class<?> valuesNextValueFromProvider() {
+        return primType;
     }
 
     @Override
-    @Test
-    public void testNext() {
-        super.testNext();
+    protected Matcher<T> expectedNextWithClazz() {
+        return anyOf(nullValue(), instanceOf(primType));
     }
 
+    @Override
+    protected Class<?> valuesNextWithClazz() {
+        return primType;
+    }
 }

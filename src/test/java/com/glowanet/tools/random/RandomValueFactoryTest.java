@@ -29,7 +29,7 @@ public class RandomValueFactoryTest {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{index}: fallbackActive={0}")
     public static List<Object> data() {
         return Arrays.asList(new Object[]{true, false});
     }
@@ -40,7 +40,6 @@ public class RandomValueFactoryTest {
     @Before
     public void setUp() {
         RandomValueFactory.getInstance().setFallback(fallbackActive);
-        verifyFallback(fallbackActive);
     }
 
     private void verifyFallback(boolean active) {
@@ -59,6 +58,11 @@ public class RandomValueFactoryTest {
 
     private boolean getSilentFlag() {
         return ReflectionHelper.readField("silent", RandomValueFactory.getInstance());
+    }
+
+    @Test
+    public void testIsFallback() {
+        verifyFallback(fallbackActive);
     }
 
     @Test

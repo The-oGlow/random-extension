@@ -1,10 +1,8 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.Primitive;
+import com.glowanet.reflect.Primitive;
 import org.apache.commons.lang3.RandomUtils;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,24 +13,32 @@ import java.util.List;
  */
 public class RandomStrategyPrimitive extends AbstractRandomStrategyByType {
 
+    protected static final List<Class<?>> SUPP_TYPES = Primitive.typesOfPrimitiveAll();
+
     @Override
     public <T> T next(Class<?> valueClazz) {
         Object result;
-        if (Boolean.TYPE.equals(valueClazz)) {
+        Class<?> objValueClazz = null;
+        if (Primitive.isPrimitive(valueClazz)) {
+            objValueClazz = Primitive.primToObj(valueClazz);
+        } else {
+            objValueClazz = valueClazz;
+        }
+        if (Boolean.class.equals(objValueClazz)) {
             result = newRandom().nextBoolean();
-        } else if (Integer.TYPE.equals(valueClazz)) {
+        } else if (Integer.class.equals(objValueClazz)) {
             result = newRandom().nextInt();
-        } else if (Double.TYPE.equals(valueClazz)) {
+        } else if (Double.class.equals(objValueClazz)) {
             result = newRandom().nextDouble();
-        } else if (Float.TYPE.equals(valueClazz)) {
+        } else if (Float.class.equals(objValueClazz)) {
             result = newRandom().nextFloat();
-        } else if (Long.TYPE.equals(valueClazz)) {
+        } else if (Long.class.equals(objValueClazz)) {
             result = newRandom().nextLong();
-        } else if (Character.TYPE.equals(valueClazz)) {
+        } else if (Character.class.equals(objValueClazz)) {
             byte[] bytes = new byte[1];
             newRandom().nextBytes(bytes);
             result = (char) bytes[0];
-        } else if (Byte.TYPE.equals(valueClazz)) {
+        } else if (Byte.class.equals(objValueClazz)) {
             byte[] bytes = new byte[1];
             newRandom().nextBytes(bytes);
             result = bytes[0];
@@ -44,10 +50,7 @@ public class RandomStrategyPrimitive extends AbstractRandomStrategyByType {
     }
 
     @Override
-    public List<Type> supportedTypes() {
-        List<Type> types = new ArrayList<>();
-        types.add(Primitive.class);
-        types.addAll(Primitive.typesOfPrimitive());
-        return types;
+    public List<Class<?>> supportedTypes() {
+        return SUPP_TYPES;
     }
 }

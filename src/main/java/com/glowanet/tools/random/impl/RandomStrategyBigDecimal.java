@@ -1,11 +1,16 @@
 package com.glowanet.tools.random.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Specific Implementation for {@code BigDecimal}.
  */
 public class RandomStrategyBigDecimal extends AbstractRandomStrategy<BigDecimal> {
+
+    protected static final List<Class<?>> SUPP_TYPES = List.of(
+            BigDecimal.class
+    );
 
     public RandomStrategyBigDecimal() {
         super(BigDecimal.class);

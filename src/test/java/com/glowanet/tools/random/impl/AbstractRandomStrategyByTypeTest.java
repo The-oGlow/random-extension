@@ -1,6 +1,5 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.IRandomStrategy;
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
 import com.glowanet.util.junit.TestResultHelper;
 import com.glowanet.util.reflect.ReflectionHelper;
@@ -8,9 +7,7 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Type;
 import java.security.SecureRandom;
-import java.util.Collection;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,9 +17,11 @@ import static org.hamcrest.Matchers.nullValue;
 
 public abstract class AbstractRandomStrategyByTypeTest<T, ST extends AbstractRandomStrategyByType> {
 
-    protected static final String        VERIFY_IS_NOT_SUPPORTED = "Verify the random value is not supported!";
-    protected static final String        OVERRIDE_METHOD         = "Default method not supported. Please override!";
-    protected static final Class<Object> TEST_CLAZZ_OBJECT       = Object.class;
+    protected static final String   VERIFY_IS_NOT_SUPPORTED = "Verify the random value is not supported!";
+    protected static final String   OVERRIDE_METHOD         = "Default method not supported. Please override!";
+    protected static final Class<?> TEST_CLAZZ_OBJECT       = Object.class;
+    protected static final Class<?> TEST_CLAZZ_STRING       = String.class;
+    protected static final Class<?> TEST_CLAZZ_PRIMITIVE    = long.class;
 
     protected       ST        o2ST;
     protected final Class<ST> strategyClazz;
@@ -46,9 +45,9 @@ public abstract class AbstractRandomStrategyByTypeTest<T, ST extends AbstractRan
 
     @Test
     public void testIsSupported() {
-        boolean actual = o2ST.isSupported(actualIsSupported());
+        boolean actual = o2ST.isSupported(valuesIsSupported());
 
-        assertThat(actual, expectedIsSupported());
+        assertThat(String.format("For '%s' exepected support:", valuesIsSupported()), actual, expectedIsSupported());
     }
 
     @Test
@@ -62,15 +61,22 @@ public abstract class AbstractRandomStrategyByTypeTest<T, ST extends AbstractRan
     }
 
     @Test
+    public void testNextWithClazz() {
+        T actual = o2ST.next(valuesNextWithClazz());
+
+        assertThat(actual, expectedNextWithClazz());
+    }
+
+    @Test
     public void testSupportedTypes() {
-        List<Type> actual = o2ST.supportedTypes();
+        List<Class<?>> actual = o2ST.supportedTypes();
 
         assertThat(actual, expectedSupportedTypes());
     }
 
     @Test
     public void testGetProviders() {
-        List<Class<? extends IRandomStrategy<?>>> actual = o2ST.getProviders();
+        List<Class<?>> actual = o2ST.getProviders();
 
         assertThat(actual, expectedGetProviders());
     }
@@ -91,9 +97,9 @@ public abstract class AbstractRandomStrategyByTypeTest<T, ST extends AbstractRan
 
     @Test
     public void testNextValueFromProvider() {
-        Object actual = o2ST.nextValueFromProvider(RandomStrategyObject.class, TEST_CLAZZ_OBJECT);
+        T actual = (T) o2ST.nextValueFromProvider(RandomStrategyObject.class, valuesNextValueFromProvider());
 
-        assertThat(actual, nullValue());
+        assertThat(actual, expectedNextValueFromProvider());
     }
 
     @Test
@@ -105,11 +111,19 @@ public abstract class AbstractRandomStrategyByTypeTest<T, ST extends AbstractRan
 
     protected abstract Matcher<Boolean> expectedIsSupported();
 
-    protected abstract Class<?> actualIsSupported();
+    protected abstract Class<?> valuesIsSupported();
 
-    protected abstract Matcher<Collection<?>> expectedSupportedTypes();
+    protected abstract Matcher<Iterable<?>> expectedSupportedTypes();
 
-    protected abstract Matcher<Collection<?>> expectedGetProviders();
+    protected abstract Matcher<Iterable<?>> expectedGetProviders();
+
+    protected abstract Matcher<T> expectedNextWithClazz();
+
+    protected abstract Class<?> valuesNextWithClazz();
+
+    protected abstract Matcher<T> expectedNextValueFromProvider();
+
+    protected abstract Class<?> valuesNextValueFromProvider();
 
     protected ST prepareO2T() {
         return ReflectionHelper.newInstance(strategyClazz);

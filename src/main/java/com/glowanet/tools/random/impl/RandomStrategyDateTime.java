@@ -1,6 +1,5 @@
 package com.glowanet.tools.random.impl;
 
-import java.lang.reflect.Type;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
@@ -17,6 +16,12 @@ import java.util.List;
  * Creates random value for a bunch of date and time types.
  */
 public class RandomStrategyDateTime extends AbstractRandomStrategyByType {
+
+    protected static final List<Class<?>> SUPP_TYPES = List.of(
+            Date.class, Time.class,
+            LocalDateTime.class, LocalDate.class, LocalTime.class,
+            Duration.class, Period.class, Instant.class
+    );
 
     @Override
     public <T> T next(Class<?> valueClazz) {
@@ -51,11 +56,7 @@ public class RandomStrategyDateTime extends AbstractRandomStrategyByType {
     }
 
     @Override
-    public List<Type> supportedTypes() {
-        return List.of( //
-                LocalDateTime.class, LocalDate.class, LocalTime.class, //
-                Date.class, Time.class, //
-                Duration.class, Period.class, Instant.class //
-        );
+    public List<Class<?>> supportedTypes() {
+        return SUPP_TYPES;
     }
 }
