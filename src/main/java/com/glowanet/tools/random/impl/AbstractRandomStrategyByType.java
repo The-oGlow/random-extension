@@ -1,5 +1,6 @@
 package com.glowanet.tools.random.impl;
 
+import com.glowanet.tools.random.ICommonStrategy;
 import com.glowanet.tools.random.IRandomStrategy;
 import com.glowanet.tools.random.IRandomStrategyByType;
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
@@ -7,12 +8,8 @@ import com.glowanet.util.reflect.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Base class for random values identified by its type.
+ * Base clazz for random values identified by its type.
  */
 public abstract class AbstractRandomStrategyByType extends AbstractRandomStrategy<Object> implements IRandomStrategyByType {
 
@@ -20,14 +17,6 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
 
     protected AbstractRandomStrategyByType() {
         super(null);
-    }
-
-    /**
-     * @throws RandomUnsupportedException this method must not be used
-     */
-    @Override
-    public Class<Object> getTypeOfT() {
-        throw new RandomUnsupportedException(String.format(IRandomStrategy.METHOD_IS_NOT_SUPPORTED, "getTypeOfT()"));
     }
 
     @Override
@@ -39,36 +28,15 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
     }
 
     @Override
-    public <T> T next(Class<?> valueClazz) {
-        Object result = valueByStaticDefinition(valueClazz);
-        if (result == null) {
-            result = loopThruProvider(valueClazz);
-        }
-        if (valueClazz != null) {
-            //noinspection unchecked
-            return (T) result;
-        } else {
-            throw new RandomUnsupportedException(String.format(RANDOM_VALUE_FOR_CLAZZ_IS_NOT_GENERATED, valueClazz));
-        }
-    }
-
-    @Override
-    public List<Class<?>> supportedTypes() {
-        List<Class<?>> listSupportedTypes = new ArrayList<>();
-        for (Class<?> providerClazz : getProviders()) {
-            IRandomStrategy<?> providerInstance = ReflectionHelper.newInstance(providerClazz);
-            if (providerInstance != null && IRandomStrategyByType.class.isAssignableFrom(providerInstance.getClass())) {
-                listSupportedTypes.addAll(((IRandomStrategyByType) providerInstance).supportedTypes());
+    public <V> V next(Class<?> valueClazz) {
+        Object result = null;
+        if (isSupported(valueClazz)) {
+            result = valueByStaticDefinition(valueClazz);
+            if (result == null) {
+                result = loopThruProvider(valueClazz);
             }
         }
-        return listSupportedTypes;
-    }
-
-    /**
-     * @return the list of random provider
-     */
-    protected List<Class<?>> getProviders() {
-        return List.of();
+        return (V) result;
     }
 
     /**
@@ -88,32 +56,34 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
     }
 
     /**
-     * @return new random generator
-     */
-    @Override
-    protected SecureRandom newRandom() {
-        return new SecureRandom();
-    }
-
-    /**
-     * @param providerClazz the class of the random provider
+     * @param providerClazz the clazz of the random provider
      * @param valueClazz    the type of the random value
      *
      * @return a random value of any type
      */
+    @SuppressWarnings({"java:S2629", "java:S126"})
     protected Object nextValueFromProvider(Class<?> providerClazz, Class<?> valueClazz) {
         Object result = null;
-        IRandomStrategy<Object> provider = ReflectionHelper.newInstance(providerClazz);
+        ICommonStrategy provider = ReflectionHelper.newInstance(providerClazz);
         if (provider == null) {
             LOGGER.warn(String.format(PROVIDER_IS_INVALID, providerClazz));
-        }
-        if (provider != null && IRandomStrategyByType.class.isAssignableFrom(provider.getClass())) {
-            IRandomStrategyByType typedProvider = (IRandomStrategyByType) provider;
-            if (typedProvider.isSupported(valueClazz)) {
+        } else {
+            if (IRandomStrategyByType.class.isAssignableFrom(providerClazz)) {
+                IRandomStrategyByType typedProvider = (IRandomStrategyByType) provider;
                 result = typedProvider.next(valueClazz);
+            } else if (AbstractRandomStrategy.class.isAssignableFrom(providerClazz)) {
+                AbstractRandomStrategy<?> typedProvider = (AbstractRandomStrategy<?>) provider;
+                if (typedProvider.isSupported(valueClazz)) {
+                    result = typedProvider.next();
+                }
             }
         }
         return result;
+    }
+
+    @Override
+    protected Object valueByStaticDefinition() {
+        throw new RandomUnsupportedException(String.format(IRandomStrategy.RANGE_IS_NOT_SUPPORTED, getClass()));
     }
 
     /**
@@ -124,5 +94,4 @@ public abstract class AbstractRandomStrategyByType extends AbstractRandomStrateg
     protected Object valueByStaticDefinition(Class<?> valueClazz) {
         return null;
     }
-
 }

@@ -34,7 +34,7 @@ public class RandomValueFactoryTest {
         return Arrays.asList(new Object[]{true, false});
     }
 
-    @Parameterized.Parameter(0)
+    @Parameterized.Parameter
     public boolean fallbackActive;
 
     @Before
@@ -91,6 +91,7 @@ public class RandomValueFactoryTest {
         assertThat(actual, not(emptyString()));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testGetProvider_withNull_throws_randomUnsupportedException() {
         TestResultHelper.verifyException(() -> RandomValueFactory.getInstance().getProvider(null), RandomUnsupportedException.class);

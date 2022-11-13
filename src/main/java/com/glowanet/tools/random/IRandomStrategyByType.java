@@ -3,26 +3,18 @@ package com.glowanet.tools.random;
 import java.util.List;
 
 /**
- * Interface for all random provider, based on the class type.
+ * Interface for all random provider, based on the clazz type.
  */
 public interface IRandomStrategyByType extends IRandomStrategy<Object> {
 
-    String RANDOM_VALUE_FOR_CLAZZ_IS_NOT_GENERATED = "Random value is not generated for class : %s!";
-
     /**
-     * @param valueClazz the class to create the random value from
+     * @param valueClazz A clazz
      *
-     * @return a random value of any type
-     */
-    <T> T next(Class<?> valueClazz);
-
-    /**
-     * @param valueClazz A class
-     *
-     * @return true=the {@code type} is supported, else false
+     * @return true=the {@code valueClazz} is supported, else false
      *
      * @see #supportedTypes()
      */
+    @Override
     boolean isSupported(Class<?> valueClazz);
 
     /**
@@ -30,5 +22,13 @@ public interface IRandomStrategyByType extends IRandomStrategy<Object> {
      *
      * @see #isSupported(Class)
      */
+    @Override
     List<Class<?>> supportedTypes();
+
+    /**
+     * @param valueClazz the clazz to create the random value from
+     *
+     * @return a random value of any type
+     */
+    <V> V next(Class<?> valueClazz);
 }

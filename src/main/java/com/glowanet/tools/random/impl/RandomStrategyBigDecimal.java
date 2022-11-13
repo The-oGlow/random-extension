@@ -12,7 +12,7 @@ public class RandomStrategyBigDecimal extends AbstractRandomStrategy<BigDecimal>
             BigDecimal.class
     );
 
-    public RandomStrategyBigDecimal() {
+    protected RandomStrategyBigDecimal() {
         super(BigDecimal.class);
     }
 
@@ -25,6 +25,11 @@ public class RandomStrategyBigDecimal extends AbstractRandomStrategy<BigDecimal>
     public BigDecimal next(BigDecimal rangeStart, BigDecimal rangeEnd) {
         var min = rangeStart.intValue();
         var max = rangeEnd.intValue();
-        return BigDecimal.valueOf(newRandom().nextInt(max - ((int) min) + 1) + min);
+        return BigDecimal.valueOf((newRandom().nextInt(max - min + 1) + min));
+    }
+
+    @Override
+    protected List<Class<?>> getProviders() {
+        return List.of(getClass());
     }
 }

@@ -1,35 +1,29 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.exception.RandomUnsupportedException;
-import com.glowanet.util.junit.TestResultHelper;
 import com.glowanet.util.reflect.ReflectionHelper;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
-public abstract class AbstractRandomStrategyByTypeTest<T, ST extends AbstractRandomStrategyByType> {
+public abstract class AbstractRandomStrategyByTypeTest<V> { //, ST extends AbstractRandomStrategyByType> {
 
-    protected static final String   VERIFY_IS_NOT_SUPPORTED = "Verify the random value is not supported!";
-    protected static final String   OVERRIDE_METHOD         = "Default method not supported. Please override!";
-    protected static final Class<?> TEST_CLAZZ_OBJECT       = Object.class;
-    protected static final Class<?> TEST_CLAZZ_STRING       = String.class;
-    protected static final Class<?> TEST_CLAZZ_PRIMITIVE    = long.class;
+    //protected static final Class<?> TEST_CLAZZ_OBJECT = Object.class;
 
-    protected       ST        o2ST;
-    protected final Class<ST> strategyClazz;
-    protected final Class<T>  valueClazz;
+    protected       AbstractRandomStrategyByType o2ST;
+    protected final Class<?>                     strategyClazz;
 
-    public AbstractRandomStrategyByTypeTest(Class<ST> strategyClazz, Class<T> valueClazz) {
+    public AbstractRandomStrategyByTypeTest(Class<?> strategyClazz) {
         this.strategyClazz = strategyClazz;
-        this.valueClazz = valueClazz;
+    }
+
+    protected AbstractRandomStrategyByType prepareO2T() {
+        return ReflectionHelper.newInstance(strategyClazz);
     }
 
     @Before
@@ -38,106 +32,83 @@ public abstract class AbstractRandomStrategyByTypeTest<T, ST extends AbstractRan
         assertThat(o2ST, instanceOf(strategyClazz));
     }
 
-    @Test
-    public void testGetTypeOfT() {
-        TestResultHelper.verifyException(() -> o2ST.getTypeOfT(), RandomUnsupportedException.class);
-    }
+    protected abstract Class<?> isSupportedValues();
+
+    protected abstract Matcher<Boolean> isSupportedExpect();
 
     @Test
     public void testIsSupported() {
-        boolean actual = o2ST.isSupported(valuesIsSupported());
+        boolean actual = o2ST.isSupported(isSupportedValues());
 
-        assertThat(String.format("For '%s' exepected support:", valuesIsSupported()), actual, expectedIsSupported());
+        assertThat(String.format("For '%s' exepected support: %s", isSupportedValues(), actual), actual, isSupportedExpect());
     }
 
-    @Test
-    public void testNext() {
-        TestResultHelper.verifyException(() -> o2ST.next(), RandomUnsupportedException.class);
-    }
-
-    @Test
-    public void testNextWithRange() {
-        TestResultHelper.verifyException(() -> o2ST.next(), RandomUnsupportedException.class);
-    }
-
-    @Test
-    public void testNextWithClazz() {
-        T actual = o2ST.next(valuesNextWithClazz());
-
-        assertThat(actual, expectedNextWithClazz());
-    }
-
-    @Test
-    public void testSupportedTypes() {
-        List<Class<?>> actual = o2ST.supportedTypes();
-
-        assertThat(actual, expectedSupportedTypes());
-    }
+    protected abstract Matcher<Iterable<?>> getProvidersExpect();
 
     @Test
     public void testGetProviders() {
         List<Class<?>> actual = o2ST.getProviders();
 
-        assertThat(actual, expectedGetProviders());
+        assertThat(actual, getProvidersExpect());
     }
+
+    protected abstract Class<?> loopThruProviderValues();
+
+    protected abstract Matcher<?> loopThruProviderExpect();
 
     @Test
     public void testLoopThruProvider() {
-        Object actual = o2ST.loopThruProvider(TEST_CLAZZ_OBJECT);
+        Object actual = o2ST.loopThruProvider(loopThruProviderValues());
 
-        assertThat(actual, nullValue());
+        assertThat((V) actual, (Matcher<V>) loopThruProviderExpect());
     }
 
-    @Test
-    public void testNewRandom() {
-        SecureRandom actual = o2ST.newRandom();
+    protected abstract Class<?> nextValueFromProviderValues();
 
-        assertThat(actual, notNullValue());
-    }
+    protected abstract Matcher<?> nextValueFromProviderExpect();
+
+    protected abstract Class<?> nextValueFromProviderProvider();
 
     @Test
     public void testNextValueFromProvider() {
-        T actual = (T) o2ST.nextValueFromProvider(RandomStrategyObject.class, valuesNextValueFromProvider());
+        Object actual = o2ST.nextValueFromProvider(nextValueFromProviderProvider(), nextValueFromProviderValues());
 
-        assertThat(actual, expectedNextValueFromProvider());
+        assertThat((V) actual, (Matcher<V>) nextValueFromProviderExpect());
     }
 
     @Test
-    public void testValueByStaticDefinition() {
-        Object actual = o2ST.valueByStaticDefinition(TEST_CLAZZ_OBJECT);
+    public void testNextValueFromProviderWithNullProvider() {
+        Object actual = o2ST.nextValueFromProvider(null, nextValueFromProviderValues());
 
-        assertThat(actual, nullValue());
+        assertThat((V) actual, nullValue());
     }
 
-    protected abstract Matcher<Boolean> expectedIsSupported();
+    protected abstract Class<?> nextWithClazzValues();
 
-    protected abstract Class<?> valuesIsSupported();
+    protected abstract Matcher<?> nextWithClazzExpect();
 
-    protected abstract Matcher<Iterable<?>> expectedSupportedTypes();
+    @Test
+    public void testNextWithClazz() {
+        V actual = o2ST.next(nextWithClazzValues());
 
-    protected abstract Matcher<Iterable<?>> expectedGetProviders();
-
-    protected abstract Matcher<T> expectedNextWithClazz();
-
-    protected abstract Class<?> valuesNextWithClazz();
-
-    protected abstract Matcher<T> expectedNextValueFromProvider();
-
-    protected abstract Class<?> valuesNextValueFromProvider();
-
-    protected ST prepareO2T() {
-        return ReflectionHelper.newInstance(strategyClazz);
+        assertThat(actual, (Matcher<V>) nextWithClazzExpect());
     }
 
-    protected T rangeStart() {
-        throw new UnsupportedOperationException(OVERRIDE_METHOD);
+    protected abstract Matcher<Iterable<?>> supportedTypesExpect();
+
+    @Test
+    public void testSupportedTypes() {
+        List<Class<?>> actual = o2ST.supportedTypes();
+
+        assertThat(actual, supportedTypesExpect());
     }
 
-    protected T rangeEnd() {
-        throw new UnsupportedOperationException(OVERRIDE_METHOD);
-    }
+    protected abstract List<Class<?>> invalidTestData();
 
-    protected void verifyInRange(T actual) {
-        throw new UnsupportedOperationException(VERIFY_IS_NOT_SUPPORTED);
+    protected Matcher<?> expectInvalidResult(Class<?> valueClazz) {
+        if (invalidTestData().contains(valueClazz)) {
+            return nullValue();
+        }
+        return null;
     }
 }

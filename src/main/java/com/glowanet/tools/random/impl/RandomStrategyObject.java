@@ -5,7 +5,7 @@ import org.apache.commons.collections4.ListUtils;
 import java.util.List;
 
 /**
- * This is the "fallback" class, trying to create a random value with some legacy features.
+ * This is the "fallback" clazz, trying to create a random value with some legacy features.
  */
 public class RandomStrategyObject extends AbstractRandomStrategyByType {
 
@@ -22,9 +22,9 @@ public class RandomStrategyObject extends AbstractRandomStrategyByType {
     protected List<Class<?>> getProviders() {
         // NOTE: The order is important!
         return List.of(
-                RandomStrategyPrimitive.class,
+                RandomStrategyBigDecimal.class,
                 RandomStrategyDateTime.class,
-                RandomStrategyBigDecimal.class
+                RandomStrategyPrimitive.class
         );
     }
 

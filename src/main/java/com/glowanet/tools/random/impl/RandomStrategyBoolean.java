@@ -11,12 +11,17 @@ public class RandomStrategyBoolean extends AbstractRandomStrategy<Boolean> {
             Boolean.class, boolean.class
     );
 
-    public RandomStrategyBoolean() {
+    protected RandomStrategyBoolean() {
         super(Boolean.class);
     }
 
     @Override
     public Boolean next() {
         return newRandom().nextBoolean();
+    }
+
+    @Override
+    public List<Class<?>> supportedTypes() {
+        return SUPP_TYPES;
     }
 }
