@@ -1,25 +1,35 @@
 package com.glowanet.tools.random.impl;
 
-import org.apache.commons.lang3.RandomUtils;
-
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Specific Implementation for {@code BigDecimal}.
  */
 public class RandomStrategyBigDecimal extends AbstractRandomStrategy<BigDecimal> {
 
-    public RandomStrategyBigDecimal() {
+    protected static final List<Class<?>> SUPP_TYPES = List.of(
+            BigDecimal.class
+    );
+
+    protected RandomStrategyBigDecimal() {
         super(BigDecimal.class);
     }
 
     @Override
     public BigDecimal next() {
-        return BigDecimal.valueOf(RandomUtils.nextLong());
+        return BigDecimal.valueOf(newRandom().nextLong());
     }
 
     @Override
     public BigDecimal next(BigDecimal rangeStart, BigDecimal rangeEnd) {
-        return BigDecimal.valueOf(RandomUtils.nextLong(rangeStart.longValue(), rangeEnd.longValue()));
+        var min = rangeStart.intValue();
+        var max = rangeEnd.intValue();
+        return BigDecimal.valueOf((newRandom().nextInt(max - min + 1) + min));
+    }
+
+    @Override
+    protected List<Class<?>> getProviders() {
+        return List.of(getClass());
     }
 }

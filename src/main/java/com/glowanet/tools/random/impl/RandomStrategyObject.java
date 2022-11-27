@@ -1,48 +1,35 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.legacy.AbstractLegacyStrategy;
-import com.glowanet.tools.random.legacy.LegacyStrategyBigDecimal;
-import com.glowanet.tools.random.legacy.LegacyStrategyDateTime;
-import com.glowanet.tools.random.legacy.LegacyStrategyPrimitive;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 
 /**
- * This is the "fallback" class, trying to create a random value with some legacy features.
- *
- * @param <T> the type of the random value
+ * This is the "fallback" clazz, trying to create a random value with some legacy features.
  */
-public class RandomStrategyObject<T> extends AbstractRandomStrategyByType<T> {
+public class RandomStrategyObject extends AbstractRandomStrategyByType {
 
-    /**
-     * Standard length of alphanumeric values.
-     */
-    public static final int DEFAULT_ALPHA_LENGTH = 5;
-
-    public RandomStrategyObject() {
-        super(null);
-    }
+    protected static final List<Class<?>> SUPP_TYPES =
+            ListUtils.union(
+                    RandomStrategyPrimitive.SUPP_TYPES,
+                    ListUtils.union(
+                            RandomStrategyDateTime.SUPP_TYPES,
+                            RandomStrategyBigDecimal.SUPP_TYPES
+                    )
+            );
 
     @Override
-    protected List<Class<? extends AbstractLegacyStrategy>> getProviders() {
+    protected List<Class<?>> getProviders() {
+        // NOTE: The order is important!
         return List.of(
-                LegacyStrategyBigDecimal.class, LegacyStrategyPrimitive.class, LegacyStrategyDateTime.class
+                RandomStrategyBigDecimal.class,
+                RandomStrategyDateTime.class,
+                RandomStrategyPrimitive.class
         );
     }
 
     @Override
-    protected Object valueByStaticDefinition(Class<T> valueClazz) {
-        Object result = null;
-
-        if (Boolean.class.equals(valueClazz)) {
-            result = RandomUtils.nextBoolean();
-        } else if (Number.class.equals(valueClazz)) {
-            result = RandomUtils.nextInt();
-        } else if (String.class.equals(valueClazz)) {
-            result = RandomStringUtils.randomAlphanumeric(DEFAULT_ALPHA_LENGTH);
-        }
-        return result;
+    public List<Class<?>> supportedTypes() {
+        return SUPP_TYPES;
     }
 }

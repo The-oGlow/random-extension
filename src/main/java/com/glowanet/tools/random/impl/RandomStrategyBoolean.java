@@ -1,18 +1,27 @@
 package com.glowanet.tools.random.impl;
 
-import org.apache.commons.lang3.RandomUtils;
+import java.util.List;
 
 /**
  * Specific Implementation for {@code Boolean}.
  */
 public class RandomStrategyBoolean extends AbstractRandomStrategy<Boolean> {
 
-    public RandomStrategyBoolean() {
+    protected static final List<Class<?>> SUPP_TYPES = List.of(
+            Boolean.class, boolean.class
+    );
+
+    protected RandomStrategyBoolean() {
         super(Boolean.class);
     }
 
     @Override
     public Boolean next() {
-        return RandomUtils.nextBoolean();
+        return newRandom().nextBoolean();
+    }
+
+    @Override
+    public List<Class<?>> supportedTypes() {
+        return SUPP_TYPES;
     }
 }

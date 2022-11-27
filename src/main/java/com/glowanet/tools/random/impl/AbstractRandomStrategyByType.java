@@ -1,37 +1,42 @@
 package com.glowanet.tools.random.impl;
 
-import com.glowanet.tools.random.ILegacyStrategy;
+import com.glowanet.tools.random.ICommonStrategy;
+import com.glowanet.tools.random.IRandomStrategy;
 import com.glowanet.tools.random.IRandomStrategyByType;
-import com.glowanet.tools.random.legacy.AbstractLegacyStrategy;
+import com.glowanet.tools.random.exception.RandomUnsupportedException;
+import com.glowanet.util.reflect.ReflectionHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+/**
+ * Base clazz for random values identified by its type.
+ */
+public abstract class AbstractRandomStrategyByType extends AbstractRandomStrategy<Object> implements IRandomStrategyByType {
 
-public abstract class AbstractRandomStrategyByType<T> extends AbstractRandomStrategy<T> implements IRandomStrategyByType<T> {
-    /**
-     * @param typeOfT the type of the random value
-     */
-    protected AbstractRandomStrategyByType(Class<T> typeOfT) {
-        super(typeOfT);
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    protected AbstractRandomStrategyByType() {
+        super(null);
     }
 
     @Override
-    public T next() {
-        throw new UnsupportedOperationException(METHOD_IS_NOT_SUPPORTED);
-    }
-
-    @Override
-    public Class<T> getTypeOfT() {
-        throw new UnsupportedOperationException(METHOD_IS_NOT_SUPPORTED);
-    }
-
-    @Override
-    public Object next(Class<T> valueClazz) {
-        Object result = valueByStaticDefinition(valueClazz);
-        if (result == null) {
-            result = loopThruProvider(valueClazz);
+    public boolean isSupported(Class<?> valueClazz) {
+        if (valueClazz == null) {
+            return false;
         }
-        return result;
+        return supportedTypes().contains(valueClazz);
+    }
+
+    @Override
+    public <V> V next(Class<?> valueClazz) {
+        Object result = null;
+        if (isSupported(valueClazz)) {
+            result = valueByStaticDefinition(valueClazz);
+            if (result == null) {
+                result = loopThruProvider(valueClazz);
+            }
+        }
+        return (V) result;
     }
 
     /**
@@ -39,22 +44,10 @@ public abstract class AbstractRandomStrategyByType<T> extends AbstractRandomStra
      *
      * @return a random value of any type
      */
-    protected abstract Object valueByStaticDefinition(Class<T> valueClazz);
-
-    /**
-     * @return the list of random provider
-     */
-    protected abstract List<Class<? extends AbstractLegacyStrategy>> getProviders();
-
-    /**
-     * @param valueClazz the type of the random value
-     *
-     * @return a random value of any type
-     */
-    protected Object loopThruProvider(Class<T> valueClazz) {
+    protected Object loopThruProvider(Class<?> valueClazz) {
         Object result = null;
         for (Class<?> providerClazz : getProviders()) {
-            result = valueFromProviderLoop(providerClazz, valueClazz);
+            result = nextValueFromProvider(providerClazz, valueClazz);
             if (result != null) {
                 break;
             }
@@ -63,21 +56,42 @@ public abstract class AbstractRandomStrategyByType<T> extends AbstractRandomStra
     }
 
     /**
-     * @param providerClazz the class of the random provider
+     * @param providerClazz the clazz of the random provider
      * @param valueClazz    the type of the random value
      *
      * @return a random value of any type
      */
-    private Object valueFromProviderLoop(Class<?> providerClazz, Class<T> valueClazz) {
+    @SuppressWarnings({"java:S2629", "java:S126"})
+    protected Object nextValueFromProvider(Class<?> providerClazz, Class<?> valueClazz) {
         Object result = null;
-        try {
-            ILegacyStrategy provider = (ILegacyStrategy) providerClazz.getDeclaredConstructor((Class<?>[]) null).newInstance((Object[]) null);
-            if (provider.isSupported(valueClazz)) {
-                result = provider.next(valueClazz);
+        ICommonStrategy provider = ReflectionHelper.newInstance(providerClazz);
+        if (provider == null) {
+            LOGGER.warn(String.format(PROVIDER_IS_INVALID, providerClazz));
+        } else {
+            if (IRandomStrategyByType.class.isAssignableFrom(providerClazz)) {
+                IRandomStrategyByType typedProvider = (IRandomStrategyByType) provider;
+                result = typedProvider.next(valueClazz);
+            } else if (AbstractRandomStrategy.class.isAssignableFrom(providerClazz)) {
+                AbstractRandomStrategy<?> typedProvider = (AbstractRandomStrategy<?>) provider;
+                if (typedProvider.isSupported(valueClazz)) {
+                    result = typedProvider.next();
+                }
             }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            //ignore
         }
         return result;
+    }
+
+    @Override
+    protected Object valueByStaticDefinition() {
+        throw new RandomUnsupportedException(String.format(IRandomStrategy.RANGE_IS_NOT_SUPPORTED, getClass()));
+    }
+
+    /**
+     * @param valueClazz the type of the random value
+     *
+     * @return a random value of any type
+     */
+    protected Object valueByStaticDefinition(Class<?> valueClazz) {
+        return null;
     }
 }

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="10-mvn [verify]" type="MavenRunConfiguration" factoryName="Maven" folderName="random-extension">
+    <configuration default="false" name="51-mvn [coveralls]" type="MavenRunConfiguration" factoryName="Maven" folderName="random-extension">
         <MavenSettings>
             <option name="myGeneralSettings"/>
             <option name="myRunnerSettings">
@@ -11,7 +11,11 @@
                     <option name="jreName" value="#USE_PROJECT_JDK"/>
                     <option name="mavenProperties">
                         <map>
+                            <entry key="branch" value="develop"/>
+                            <entry key="maven.test.failure.ignore" value="true"/>
+                            <entry key="repoToken" value="${CRT_random-extension}"/>
                             <entry key="skipITs" value="false"/>
+                            <entry key="skipTests" value="false"/>
                         </map>
                     </option>
                     <option name="passParentEnv" value="true"/>
@@ -27,8 +31,8 @@
                     </option>
                     <option name="goals">
                         <list>
-                            <option value="clean"/>
                             <option value="verify"/>
+                            <option value="coveralls:report"/>
                         </list>
                     </option>
                     <option name="pomFileName"/>

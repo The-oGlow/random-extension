@@ -7,11 +7,13 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Base class for all random factories.
+ * Base clazz for all random factories.
  */
 public abstract class AbstractRandomValueFactory {
 
-    protected static final Logger LOGGER = LogManager.getLogger();
+    public static final String NULL_NOT_SUPPORTED = "Null is not supported as class!";
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private boolean silent = true;
 
@@ -26,13 +28,21 @@ public abstract class AbstractRandomValueFactory {
         this.silent = silent;
     }
 
+    /**
+     * @return the clazzpath to the provider
+     */
     protected abstract String getProviderLocation();
 
+    /**
+     * @param valueClazz the type of the random values
+     *
+     * @return the provider, which creates random values of {@code valueClazz}
+     */
     public abstract ICommonStrategy getProvider(Class<?> valueClazz);
 
     /**
      * @param providerLocation the package name of the provider
-     * @param valueClazzName   the class name of the provider
+     * @param valueClazzName   the clazz name of the provider
      *
      * @return the found class
      */
@@ -50,8 +60,8 @@ public abstract class AbstractRandomValueFactory {
     }
 
     /**
-     * @param valueClazz           the class of the random value
-     * @param valueClazzParameters array of classes for the constructor parameters
+     * @param valueClazz           the clazz of the random value
+     * @param valueClazzParameters array of clazzes for the constructor parameters
      *
      * @return a provider instance
      */
@@ -65,9 +75,9 @@ public abstract class AbstractRandomValueFactory {
     }
 
     /**
-     * @param providerClazz        the class of the random provider
-     * @param valueClazz           the class of the random value
-     * @param valueClazzParameters array of classes for the constructor parameters
+     * @param providerClazz        the clazz of the random provider
+     * @param valueClazz           the clazz of the random value
+     * @param valueClazzParameters array of clazzes for the constructor parameters
      *
      * @return a new provider instance
      */
