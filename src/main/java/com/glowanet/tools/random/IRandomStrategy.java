@@ -14,7 +14,6 @@ public interface IRandomStrategy<V> extends ICommonStrategy {
     String RANGE_IS_NOT_SUPPORTED  = "Random value within a range is not supported : %s!";
     String METHOD_IS_NOT_SUPPORTED = "Method is not supported : %s!";
     String PROVIDER_IS_INVALID     = "Provider is invalid : %s!";
-//    String RANDOM_VALUE_FOR_CLAZZ_IS_NOT_GENERATED = "Random value is not generated for class : %s!";
 
     /**
      * @param valueClazz A clazz
@@ -35,7 +34,7 @@ public interface IRandomStrategy<V> extends ICommonStrategy {
     /**
      * @return a random value of type {@code V}
      *
-     * @see #next(V, V)
+     * @see #next(Object, Object)
      */
     V next();
 
