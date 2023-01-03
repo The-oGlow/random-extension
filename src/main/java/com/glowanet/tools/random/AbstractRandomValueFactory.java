@@ -29,6 +29,13 @@ public abstract class AbstractRandomValueFactory {
     }
 
     /**
+     * @return TRUE = Don't annoy with logger output, else FALSE
+     */
+    public boolean isSilent() {
+        return silent;
+    }
+
+    /**
      * @return the clazzpath to the provider
      */
     protected abstract String getProviderLocation();

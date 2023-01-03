@@ -3,7 +3,6 @@ package com.glowanet.tools.random;
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
 import com.glowanet.tools.random.impl.RandomStrategyObject;
 import com.glowanet.util.junit.TestResultHelper;
-import com.glowanet.util.reflect.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hamcrest.Matcher;
@@ -29,22 +28,32 @@ public class RandomValueFactoryTest {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    @Parameterized.Parameters(name = "{index}: fallbackActive={0}")
+    @Parameterized.Parameters(name = "{index}: fallbackActive={0},silent={1}")
     public static List<Object> data() {
-        return Arrays.asList(new Object[]{true, false});
+        return Arrays.asList(
+                new Object[][]{{true, true}, {true, false}, {false, true}, {false, false}});
     }
 
     @Parameterized.Parameter
     public boolean fallbackActive;
 
+    @Parameterized.Parameter(1)
+    public boolean silent;
+
     @Before
     public void setUp() {
         RandomValueFactory.getInstance().setFallback(fallbackActive);
+        RandomValueFactory.getInstance().setSilent(silent);
     }
 
     private void verifyFallback(boolean active) {
         LOGGER.info("Running with fallback : {}", active);
         assertThat("fallback must be " + (active ? "active" : "deactivated"), RandomValueFactory.getInstance().isFallback(), is(active));
+    }
+
+    private void verifySilent(boolean silent) {
+        LOGGER.info("Running with silent : {}", silent);
+        assertThat("silent must be " + (silent ? "active" : "deactivated"), RandomValueFactory.getInstance().isSilent(), is(silent));
     }
 
     private void assertThatDecision(Object actual, Matcher<Object> trueMatcher, Matcher<Object> falseMatcher) {
@@ -57,7 +66,7 @@ public class RandomValueFactoryTest {
     }
 
     private boolean getSilentFlag() {
-        return ReflectionHelper.readField("silent", RandomValueFactory.getInstance());
+        return RandomValueFactory.getInstance().isSilent();
     }
 
     @Test
@@ -66,14 +75,19 @@ public class RandomValueFactoryTest {
     }
 
     @Test
+    public void testIsSilent() {
+        verifySilent(silent);
+    }
+
+    @Test
     public void testSetSilent() {
-        assertThat(getSilentFlag(), equalTo(true));
+        assertThat(getSilentFlag(), equalTo(silent));
 
-        RandomValueFactory.getInstance().setSilent(false);
-        assertThat(getSilentFlag(), equalTo(false));
+        RandomValueFactory.getInstance().setSilent(!silent);
+        assertThat(getSilentFlag(), equalTo(!silent));
 
-        RandomValueFactory.getInstance().setSilent(true);
-        assertThat(getSilentFlag(), equalTo(true));
+        RandomValueFactory.getInstance().setSilent(silent);
+        assertThat(getSilentFlag(), equalTo(silent));
 
     }
 

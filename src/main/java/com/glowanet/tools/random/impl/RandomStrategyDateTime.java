@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +24,7 @@ public class RandomStrategyDateTime extends AbstractRandomStrategyByType {
             Date.class, Time.class, Timestamp.class,
             LocalDateTime.class, LocalDate.class, LocalTime.class,
             ZonedDateTime.class, OffsetDateTime.class, OffsetTime.class,
+            Duration.class, Period.class,
             Instant.class
     );
 
@@ -105,16 +105,11 @@ public class RandomStrategyDateTime extends AbstractRandomStrategyByType {
 
     protected Object nextInterval(Class<?> valueClazz) {
         Object result;
+        ZonedDateTime zdT = ZonedDateTime.now();
         if (Duration.class.equals(valueClazz)) {
-            result = Duration.of(
-                    newRandom().nextInt(Instant.now().get(ChronoField.SECOND_OF_MINUTE)), ChronoUnit.SECONDS
-            );
+            result = Duration.of(newRandom().nextInt(zdT.getSecond()), ChronoUnit.SECONDS);
         } else if (Period.class.equals(valueClazz)) {
-            result = Period.of( //
-                    newRandom().nextInt(Instant.now().get(ChronoField.YEAR)),
-                    newRandom().nextInt(Instant.now().get(ChronoField.MONTH_OF_YEAR)), //
-                    newRandom().nextInt(Instant.now().get(ChronoField.DAY_OF_MONTH)) //
-            );
+            result = Period.of(zdT.getYear(), zdT.getMonthValue(), zdT.getDayOfMonth());
         } else {
             result = null;
         }

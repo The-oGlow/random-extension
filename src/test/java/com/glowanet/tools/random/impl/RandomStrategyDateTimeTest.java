@@ -6,12 +6,14 @@ import org.junit.runners.Parameterized;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.Period;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +59,7 @@ public class RandomStrategyDateTimeTest<VT extends Comparable<VT>> extends Abstr
                 Date.class, Time.class, Timestamp.class,
                 LocalDateTime.class, LocalDate.class, LocalTime.class,
                 ZonedDateTime.class, OffsetDateTime.class, OffsetTime.class,
+                Duration.class, Period.class,
                 Instant.class
         );
     }
