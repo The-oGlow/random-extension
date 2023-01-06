@@ -1,5 +1,7 @@
 package com.glowanet.tools.random.impl;
 
+import com.glowanet.tools.random.DateTime;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -20,13 +22,7 @@ import java.util.List;
  */
 public class RandomStrategyDateTime extends AbstractRandomStrategyByType {
 
-    protected static final List<Class<?>> SUPP_TYPES = List.of(
-            Date.class, Time.class, Timestamp.class,
-            LocalDateTime.class, LocalDate.class, LocalTime.class,
-            ZonedDateTime.class, OffsetDateTime.class, OffsetTime.class,
-            Duration.class, Period.class,
-            Instant.class
-    );
+    public static final List<Class<?>> SUPP_TYPES = DateTime.all();
 
     @Override
     public <V> V next(Class<?> valueClazz) {

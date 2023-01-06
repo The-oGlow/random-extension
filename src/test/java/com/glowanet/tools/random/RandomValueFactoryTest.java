@@ -2,6 +2,7 @@ package com.glowanet.tools.random;
 
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
 import com.glowanet.tools.random.impl.RandomStrategyObject;
+import com.glowanet.tools.random.impl.RandomStrategyPrimitive;
 import com.glowanet.util.junit.TestResultHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -122,7 +124,7 @@ public class RandomValueFactoryTest {
     public void testGetProvider_withPrimitive_return_variants() {
         IRandomStrategy<?> actual = RandomValueFactory.getInstance().getProvider(int.class);
 
-        assertThatDecision(actual, isA(RandomStrategyObject.class), nullValue());
+        assertThatDecision(actual, isA(RandomStrategyPrimitive.class), nullValue());
     }
 
     @Test
@@ -173,4 +175,23 @@ public class RandomValueFactoryTest {
 
         assertThat(actual, instanceOf(RandomStrategyObject.class));
     }
+
+    @Test
+    public void testConvertPrimitive_withInt_return_integer() {
+        Class<?> actual = RandomValueFactory.getInstance().convertPrimitive(int.class);
+        assertThat(actual, equalTo(Integer.class));
+    }
+
+    @Test
+    public void testConvertPrimitive_withInteger_return_integer() {
+        Class<?> actual = RandomValueFactory.getInstance().convertPrimitive(Integer.class);
+        assertThat(actual, equalTo(Integer.class));
+    }
+
+    @Test
+    public void testConvertPrimitive_withNonPrimitive_return_NonePrimitive() {
+        Class<?> actual = RandomValueFactory.getInstance().convertPrimitive(BigDecimal.class);
+        assertThat(actual, equalTo(BigDecimal.class));
+    }
+
 }

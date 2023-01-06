@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class RandomStrategyObject extends AbstractRandomStrategyByType {
 
-    protected static final List<Class<?>> SUPP_TYPES =
+    public static final List<Class<?>> SUPP_TYPES =
             ListUtils.union(
                     RandomStrategyPrimitive.SUPP_TYPES,
                     ListUtils.union(

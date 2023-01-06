@@ -1,9 +1,11 @@
 package com.glowanet.tools.random;
 
+import com.glowanet.reflect.Primitive;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -48,14 +50,12 @@ public abstract class AbstractRandomValueFactory {
     public abstract ICommonStrategy getProvider(Class<?> valueClazz);
 
     /**
-     * @param providerLocation the package name of the provider
-     * @param valueClazzName   the clazz name of the provider
+     * @param providerClazzName the full clazz name of the provider
      *
      * @return the found class
      */
-    protected Class<?> findProviderClazz(String providerLocation, String valueClazzName) {
+    protected Class<?> findProviderClazz(String providerClazzName) {
         Class<?> clazzType = null;
-        String providerClazzName = providerLocation + valueClazzName;
         try {
             clazzType = ClassUtils.getClass(providerClazzName);
         } catch (ClassNotFoundException e) {
@@ -75,10 +75,35 @@ public abstract class AbstractRandomValueFactory {
     protected ICommonStrategy generateRandomProvider(Class<?> valueClazz, Class<?>... valueClazzParameters) {
         ICommonStrategy providerInstance = null;
         if (valueClazz != null) {
-            Class<?> providerClazz = findProviderClazz(getProviderLocation(), valueClazz.getSimpleName());
+            String providerClazzName = generateProviderClazzName(getProviderLocation(), valueClazz);
+            Class<?> providerClazz = findProviderClazz(providerClazzName);
             providerInstance = instantiateProvider(providerClazz, valueClazz, valueClazzParameters);
         }
         return providerInstance;
+    }
+
+    /**
+     * @param providerLocation the clazzpath to the provider
+     * @param valueClazz       the clazz of the random value
+     *
+     * @return the full clazz name of the provider
+     */
+    protected String generateProviderClazzName(String providerLocation, Class<?> valueClazz) {
+        String valueClazzName = convertPrimitive(valueClazz).getSimpleName();
+        return providerLocation + valueClazzName;
+    }
+
+    /**
+     * @param valueClazz the clazz of the random value
+     *
+     * @return the corrosponding object type of the primitive clazz or {@code valueClazz}
+     */
+    protected Class<?> convertPrimitive(Class<?> valueClazz) {
+        Class<?> result = valueClazz;
+        if (Primitive.isPrimitive(valueClazz)) {
+            result = Primitive.primToObj(valueClazz);
+        }
+        return result;
     }
 
     /**
@@ -92,10 +117,15 @@ public abstract class AbstractRandomValueFactory {
         ICommonStrategy providerInstance = null;
         if (providerClazz != null && ClassUtils.isAssignable(providerClazz, ICommonStrategy.class)) {
             try {
+                Constructor<ICommonStrategy> constructor;
                 if (valueClazzParameters.length > 0) {
-                    providerInstance = (ICommonStrategy) providerClazz.getDeclaredConstructor(valueClazzParameters).newInstance(valueClazz);
+                    constructor = (Constructor<ICommonStrategy>) providerClazz.getDeclaredConstructor(valueClazzParameters);
+                    constructor.trySetAccessible();
+                    providerInstance = constructor.newInstance(valueClazz);
                 } else {
-                    providerInstance = (ICommonStrategy) providerClazz.getDeclaredConstructor().newInstance();
+                    constructor = (Constructor<ICommonStrategy>) providerClazz.getDeclaredConstructor();
+                    constructor.trySetAccessible();
+                    providerInstance = constructor.newInstance();
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
                 if (!silent) {

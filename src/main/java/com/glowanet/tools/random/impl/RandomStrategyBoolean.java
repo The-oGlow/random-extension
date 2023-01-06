@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class RandomStrategyBoolean extends AbstractRandomStrategy<Boolean> {
 
-    protected static final List<Class<?>> SUPP_TYPES = List.of(
+    public static final List<Class<?>> SUPP_TYPES = List.of(
             Boolean.class, boolean.class
     );
 

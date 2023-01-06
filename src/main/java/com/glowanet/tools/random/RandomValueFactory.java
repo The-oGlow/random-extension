@@ -1,7 +1,7 @@
 package com.glowanet.tools.random;
 
+import com.glowanet.reflect.Primitive;
 import com.glowanet.tools.random.exception.RandomUnsupportedException;
-import com.glowanet.tools.random.impl.RandomStrategyObject;
 
 /**
  * <p>
@@ -68,7 +68,7 @@ public final class RandomValueFactory extends AbstractRandomValueFactory {
         if (valueClazz != null) {
             ICommonStrategy providerInstance = generateRandomProvider(valueClazz);
             if (fallback && (providerInstance == null)) {
-                providerInstance = getFallbackProvider();
+                providerInstance = getFallbackProvider(valueClazz);
             }
             return (IRandomStrategy<?>) providerInstance;
         } else {
@@ -77,10 +77,19 @@ public final class RandomValueFactory extends AbstractRandomValueFactory {
     }
 
     /**
+     * @param valueClazz the clazz of the random value
+     *
      * @return a random provider, using legacy methods
      */
-    private RandomStrategyObject getFallbackProvider() {
-        return (RandomStrategyObject) generateRandomProvider(Object.class);
+    ICommonStrategy getFallbackProvider(Class<?> valueClazz) {
+        ICommonStrategy fallbackProvider;
+        if (Primitive.isPrimitive(valueClazz, true)) {
+            fallbackProvider = generateRandomProvider(Primitive.class);
+        } else if (DateTime.isTemporal(valueClazz)) {
+            fallbackProvider = generateRandomProvider(DateTime.class);
+        } else {
+            fallbackProvider = generateRandomProvider(Object.class);
+        }
+        return fallbackProvider;
     }
-
 }

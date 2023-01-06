@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class RandomStrategyBigDecimal extends AbstractRandomStrategy<BigDecimal> {
 
-    protected static final List<Class<?>> SUPP_TYPES = List.of(
+    public static final List<Class<?>> SUPP_TYPES = List.of(
             BigDecimal.class
     );
 

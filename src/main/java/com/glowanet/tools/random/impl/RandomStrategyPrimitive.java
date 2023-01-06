@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class RandomStrategyPrimitive extends AbstractRandomStrategyByType {
 
-    protected static final List<Class<?>> SUPP_TYPES = Primitive.all();
+    public static final List<Class<?>> SUPP_TYPES = Primitive.all();
 
     @SuppressWarnings({"java:S126", "UnusedAssignment"})
     @Override
